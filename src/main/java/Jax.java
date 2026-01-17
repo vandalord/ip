@@ -89,64 +89,65 @@ public class Jax {
         }
     }
 
-    public void await_input() {
+    public void await_input() throws JaxException {
         Scanner userInput = new Scanner(System.in);
         while (true) {
-            String line = userInput.nextLine();
-            String[] input = line.split(" ", 2);
-            String command = input[0];
+            try {
+                String line = userInput.nextLine();
+                String[] input = line.split(" ", 2);
+                String command = input[0];
 
-            if (command.equalsIgnoreCase("bye")) {
-                break;
-            } else if (command.equalsIgnoreCase("list")) {
-                print_list();
-            } else if (command.equalsIgnoreCase("mark")) {
-                mark_task(Integer.parseInt(input[1]) - 1);
-            } else if (command.equalsIgnoreCase("unmark")) {
-                unmark_task(Integer.parseInt(input[1]) - 1);
-            } else if (command.equalsIgnoreCase("todo")) {
-                if (input.length < 2) {
-                    echo("Error - Todo description cannot be empty.", 4);
-                    continue;
+                if (command.equalsIgnoreCase("bye")) {
+                    break;
+                } else if (command.equalsIgnoreCase("list")) {
+                    print_list();
+                } else if (command.equalsIgnoreCase("mark") || command.equalsIgnoreCase("unmark")) {
+                    if (input.length < 2) throw new JaxException("Error - Specify a task number.");
+                    try {
+                        int task_idx = Integer.parseInt(input[1]) - 1;
+                        if (command.equalsIgnoreCase("mark")) mark_task(task_idx);
+                        else unmark_task(task_idx);
+                    } catch (NumberFormatException e) {
+                        throw new JaxException("Error - Invalid task number.");
+                    }
+                } else if (command.equalsIgnoreCase("todo")) {
+                    if (input.length < 2 || input[1].trim().isEmpty()) {
+                        throw new JaxException("Error - Todo description cannot be empty.");
+                    }
+                    insert_task(new Todo(input[1]));
+                } else if (command.equalsIgnoreCase("deadline")) {
+                    if (input.length < 2 || input[1].trim().isEmpty()) {
+                        throw new JaxException("Error - Deadline description cannot be empty.");
+                    }
+                    String[] segments = input[1].split(" /by ");
+                    if (segments.length < 2) {
+                        throw new JaxException("Error - Deadline time not specified.");
+                    }
+                    insert_task(new Deadline(segments[0], segments[1]));
+                } else if (command.equalsIgnoreCase("event")) {
+                    if (input.length < 2 || input[1].trim().isEmpty()) {
+                        throw new JaxException("Error - Event description cannot be empty.");
+                    }
+                    String[] fromSplit = input[1].split(" /from ");
+                    if (fromSplit.length < 2) {
+                        throw new JaxException("Error - Start time not specified.");
+                    }
+                    String[] toSplit = fromSplit[1].split(" /to ");
+                    if (toSplit.length < 2) {
+                        throw new JaxException("Error - End time not specified.");
+                    }
+                    insert_task(new Event(fromSplit[0], toSplit[0], toSplit[1]));
+                } else {
+                    echo("Error - Invalid Input.", 4);
                 }
-                insert_task(new Todo(input[1]));
-            } else if (command.equalsIgnoreCase("deadline")) {
-                if (input.length < 2) {
-                    echo("Error - Deadline description cannot be empty.", 4);
-                    continue;
-                }
-                String[] segments = input[1].split(" /by ");
-                if (segments.length < 2) {
-                    echo("Error - Deadline time not specified.", 4);
-                    continue;
-                }
-                insert_task(new Deadline(segments[0], segments[1]));
-            } else if (command.equalsIgnoreCase("event")) {
-
-                if (input.length < 2) {
-                    echo("Error - Event description cannot be empty.", 4);
-                    continue; }
-
-                String[] fromSplit = input[1].split(" /from ");
-                if (fromSplit.length < 2) {
-                    echo("Error - Start time not specified.", 4);
-                    continue;
-                }
-
-                String[] toSplit = fromSplit[1].split(" /to ");
-                if (toSplit.length < 2) {
-                    echo("Error - End time not specified.", 4);
-                    continue;
-                }
-
-                insert_task(new Event(fromSplit[0], toSplit[0], toSplit[1]));
-            } else {
-                insert_task(new Task(line));
+            }
+            catch (JaxException e) {
+                echo(e.getMessage(), 4);
             }
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws JaxException {
         Jax bot = new Jax();
         bot.greet();
         bot.await_input();
