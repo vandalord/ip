@@ -39,10 +39,10 @@ public class Jax {
         System.out.print(sb);
     }
 
-    public void insert_task(String task) {
-        this.tasks[idx] = new Task(task);
+    public void insert_task(Task task) {
+        this.tasks[idx] = task;
         this.idx += 1;
-        echo("added: " + task, 4);
+        echo("added: " + task + "\nNow you have " + idx + " tasks in the list", 4);
     }
 
     public void print_list() {
@@ -93,7 +93,7 @@ public class Jax {
         Scanner userInput = new Scanner(System.in);
         while (true) {
             String line = userInput.nextLine();
-            String[] input = line.split(" ");
+            String[] input = line.split(" ", 2);
             String command = input[0];
 
             if (command.equalsIgnoreCase("bye")) {
@@ -104,8 +104,44 @@ public class Jax {
                 mark_task(Integer.parseInt(input[1]) - 1);
             } else if (command.equalsIgnoreCase("unmark")) {
                 unmark_task(Integer.parseInt(input[1]) - 1);
+            } else if (command.equalsIgnoreCase("todo")) {
+                if (input.length < 2) {
+                    echo("Error - Todo description cannot be empty.", 4);
+                    continue;
+                }
+                insert_task(new Todo(input[1]));
+            } else if (command.equalsIgnoreCase("deadline")) {
+                if (input.length < 2) {
+                    echo("Error - Deadline description cannot be empty.", 4);
+                    continue;
+                }
+                String[] segments = input[1].split(" /by ");
+                if (segments.length < 2) {
+                    echo("Error - Deadline time not specified.", 4);
+                    continue;
+                }
+                insert_task(new Deadline(segments[0], segments[1]));
+            } else if (command.equalsIgnoreCase("event")) {
+
+                if (input.length < 2) {
+                    echo("Error - Event description cannot be empty.", 4);
+                    continue; }
+
+                String[] fromSplit = input[1].split(" /from ");
+                if (fromSplit.length < 2) {
+                    echo("Error - Start time not specified.", 4);
+                    continue;
+                }
+
+                String[] toSplit = fromSplit[1].split(" /to ");
+                if (toSplit.length < 2) {
+                    echo("Error - End time not specified.", 4);
+                    continue;
+                }
+
+                insert_task(new Event(fromSplit[0], toSplit[0], toSplit[1]));
             } else {
-                insert_task(line);
+                insert_task(new Task(input[1]));
             }
         }
     }
