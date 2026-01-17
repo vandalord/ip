@@ -141,7 +141,7 @@ public class Jax {
 
                 insert_task(new Event(fromSplit[0], toSplit[0], toSplit[1]));
             } else {
-                insert_task(new Task(input[1]));
+                insert_task(new Task(line));
             }
         }
     }
