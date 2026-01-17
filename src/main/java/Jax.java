@@ -1,5 +1,4 @@
 import java.util.Arrays;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Jax {
@@ -7,7 +6,7 @@ public class Jax {
     static String separator = "―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――";
 
     int idx = 0;
-    String[] list_data = new String[100];
+    Task[] tasks = new Task[100];
 
     public void greet() {
         // Start-up message text
@@ -18,11 +17,6 @@ public class Jax {
     public void exit() {
         // Exit message text
         echo(" \uD83D\uDC4B再见. Hope to see you again soon!", 4);
-    }
-
-    public void separate_text() {
-        String line = "―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――";
-        System.out.println(line);
     }
 
     public void echo(String text, int indentLevel) {
@@ -42,35 +36,74 @@ public class Jax {
 
         sb.append(indent).append(separator).append(newLine);
 
-        System.out.print(sb.toString());
+        System.out.print(sb);
     }
 
-    public void insert_task(String line) {
-        this.list_data[idx] = line;
+    public void insert_task(String task) {
+        this.tasks[idx] = new Task(task);
         this.idx += 1;
-        echo("added: " + line, 4);
+        echo("added: " + task, 4);
     }
 
     public void print_list() {
-
-        String[] currentList = Arrays.copyOf(list_data, idx);
+        Task[] currentList = Arrays.copyOf(tasks, idx);
         StringBuilder sb = new StringBuilder();
+        if (currentList.length == 0) {
+            echo("List is empty.", 4);
+            return;
+        }
         for(int i = 0; i < currentList.length; i++) {
             sb.append((i + 1)).append(". ").append(currentList[i]);
             if (i < currentList.length - 1) sb.append("\n");
         }
-
         echo(sb.toString(), 4);
+    }
+
+    public void mark_task(int cur) {
+
+        if (cur < 0 || cur >= idx) {
+            echo("Invalid task number.", 4);
+            return;
+        }
+
+        Task curr = tasks[cur];
+        if (curr.mark_task()) {
+            echo("Nice! I've marked this task as done:\n" + curr, 4);
+        } else {
+            echo("This task has already been marked done:\n" + curr, 4);
+        }
+    }
+
+    public void unmark_task(int cur) {
+
+        if (cur < 0 || cur >= idx) {
+            echo("Invalid task number.", 4);
+            return;
+        }
+
+        Task curr =  tasks[cur];
+        if (curr.unmark_task()) {
+            echo("OK, I've marked this task as not done yet:\n" + curr, 4);
+        } else {
+            echo("This task hasn't been marked done:\n" + curr, 4);
+        }
     }
 
     public void await_input() {
         Scanner userInput = new Scanner(System.in);
         while (true) {
             String line = userInput.nextLine();
-            if (line.equalsIgnoreCase("bye")) {
+            String[] input = line.split(" ");
+            String command = input[0];
+
+            if (command.equalsIgnoreCase("bye")) {
                 break;
-            } else if (line.equalsIgnoreCase("list")) {
+            } else if (command.equalsIgnoreCase("list")) {
                 print_list();
+            } else if (command.equalsIgnoreCase("mark")) {
+                mark_task(Integer.parseInt(input[1]) - 1);
+            } else if (command.equalsIgnoreCase("unmark")) {
+                unmark_task(Integer.parseInt(input[1]) - 1);
             } else {
                 insert_task(line);
             }
