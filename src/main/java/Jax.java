@@ -1,12 +1,11 @@
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Jax {
 
     static String separator = "―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――";
 
-    int idx = 0;
-    Task[] tasks = new Task[100];
+    ArrayList<Task> tasks = new ArrayList<>();
 
     public void greet() {
         // Start-up message text
@@ -40,33 +39,31 @@ public class Jax {
     }
 
     public void insert_task(Task task) {
-        this.tasks[idx] = task;
-        this.idx += 1;
-        echo("added: " + task + "\nNow you have " + idx + " tasks in the list", 4);
+        tasks.add(task);
+        echo("added: " + task + "\nNow you have " + tasks.size() + " tasks in the list", 4);
     }
 
     public void print_list() {
-        Task[] currentList = Arrays.copyOf(tasks, idx);
-        StringBuilder sb = new StringBuilder();
-        if (currentList.length == 0) {
+        if (tasks.isEmpty()) {
             echo("List is empty.", 4);
             return;
         }
-        for(int i = 0; i < currentList.length; i++) {
-            sb.append((i + 1)).append(". ").append(currentList[i]);
-            if (i < currentList.length - 1) sb.append("\n");
+        StringBuilder sb = new StringBuilder("Here are the tasks in your list:\n");
+        for(int i = 0; i < tasks.size(); i++) {
+            sb.append((i + 1)).append(".").append(tasks.get(i));
+            if (i < tasks.size() - 1) sb.append("\n");
         }
         echo(sb.toString(), 4);
     }
 
     public void mark_task(int cur) {
 
-        if (cur < 0 || cur >= idx) {
+        if (cur < 0 || cur >= tasks.size()) {
             echo("Invalid task number.", 4);
             return;
         }
 
-        Task curr = tasks[cur];
+        Task curr = tasks.get(cur);
         if (curr.mark_task()) {
             echo("Nice! I've marked this task as done:\n" + curr, 4);
         } else {
@@ -76,17 +73,28 @@ public class Jax {
 
     public void unmark_task(int cur) {
 
-        if (cur < 0 || cur >= idx) {
+        if (cur < 0 || cur >= tasks.size()) {
             echo("Invalid task number.", 4);
             return;
         }
 
-        Task curr =  tasks[cur];
+        Task curr = tasks.get(cur);
         if (curr.unmark_task()) {
             echo("OK, I've marked this task as not done yet:\n" + curr, 4);
         } else {
             echo("This task hasn't been marked done:\n" + curr, 4);
         }
+    }
+
+    public void delete_task(int index) throws JaxException {
+        if (index < 0 || index >= tasks.size()) {
+            throw new JaxException("Error - Invalid task number.");
+        }
+
+        Task removedTask = tasks.get(index);
+        tasks.remove(index);
+
+        echo("Noted. I've removed this task:\n  " + removedTask + "\nNow you have " + tasks.size() + " tasks in the list.", 4);
     }
 
     public void await_input() throws JaxException {
@@ -101,12 +109,13 @@ public class Jax {
                     break;
                 } else if (command.equalsIgnoreCase("list")) {
                     print_list();
-                } else if (command.equalsIgnoreCase("mark") || command.equalsIgnoreCase("unmark")) {
+                } else if (command.equalsIgnoreCase("mark") || command.equalsIgnoreCase("unmark") || command.equalsIgnoreCase("delete")) {
                     if (input.length < 2) throw new JaxException("Error - Specify a task number.");
                     try {
                         int task_idx = Integer.parseInt(input[1]) - 1;
                         if (command.equalsIgnoreCase("mark")) mark_task(task_idx);
-                        else unmark_task(task_idx);
+                        else if (command.equalsIgnoreCase("unmark")) unmark_task(task_idx);
+                        else if (command.equalsIgnoreCase("delete")) delete_task(task_idx);
                     } catch (NumberFormatException e) {
                         throw new JaxException("Error - Invalid task number.");
                     }
