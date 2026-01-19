@@ -56,11 +56,10 @@ public class Jax {
         echo(sb.toString(), 4);
     }
 
-    public void mark_task(int cur) {
+    public void mark_task(int cur) throws JaxException {
 
         if (cur < 0 || cur >= tasks.size()) {
-            echo("Invalid task number.", 4);
-            return;
+            throw new JaxException("Error - Invalid task number.");
         }
 
         Task curr = tasks.get(cur);
@@ -71,11 +70,10 @@ public class Jax {
         }
     }
 
-    public void unmark_task(int cur) {
+    public void unmark_task(int cur) throws JaxException {
 
         if (cur < 0 || cur >= tasks.size()) {
-            echo("Invalid task number.", 4);
-            return;
+            throw new JaxException("Error - Invalid task number.");
         }
 
         Task curr = tasks.get(cur);
