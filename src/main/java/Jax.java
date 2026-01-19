@@ -151,6 +151,7 @@ public class Jax {
                         return;
                     case LIST:
                         print_list();
+                        break;
                     case MARK:
                     case UNMARK:
                     case DELETE:
@@ -163,12 +164,16 @@ public class Jax {
                         } catch (NumberFormatException e) {
                             throw new JaxException("Error - Invalid task number.");
                         }
+                        break;
                     case TODO:
                         parse_todo(input);
+                        break;
                     case DEADLINE:
                         parse_deadline(input);
+                        break;
                     case EVENT:
                         parse_event(input);
+                        break;
                 }
             }
             catch (JaxException e) {
