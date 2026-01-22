@@ -1,9 +1,15 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Jax {
 
+    private static final Logger log = Logger.getLogger(Jax.class.getName());
+
     static String separator = "―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――";
+    static String savefile_url = "savefile.txt";
 
     ArrayList<Task> tasks = new ArrayList<>();
 
@@ -128,7 +134,47 @@ public class Jax {
         insert_task(new Event(fromSplit[0], toSplit[0], toSplit[1]));
     }
 
-    public void await_input() throws JaxException {
+    public void on_startup() throws IOException, ClassNotFoundException {
+        read_savefile();
+        greet();
+    }
+
+    public void on_shutdown() throws IOException, ClassNotFoundException {
+        write_savefile();
+        exit();
+    }
+
+    public void write_savefile() throws IOException, ClassNotFoundException {
+        try (FileOutputStream fos = new FileOutputStream(savefile_url);
+             ObjectOutputStream oos = new ObjectOutputStream(fos);) {
+            oos.writeObject(tasks);
+        } catch (FileNotFoundException e) {
+            log.log(Level.SEVERE, "File not found: ", e);
+            throw new RuntimeException(e);
+        } catch (IOException ioe) {
+            log.log(Level.SEVERE, "Error writing data : ", ioe);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void read_savefile() throws IOException, ClassNotFoundException {
+        File f = new File(savefile_url);
+        if (!f.exists()) {
+            return;
+        }
+
+        try (FileInputStream fis = new FileInputStream(savefile_url);
+             ObjectInputStream ois = new ObjectInputStream(fis);) {
+            tasks = (ArrayList<Task>) ois.readObject();
+        } catch (IOException ioe) {
+            log.log(Level.SEVERE, "Error reading data : ", ioe);
+            throw new RuntimeException(ioe);
+        } catch (ClassNotFoundException c) {
+            log.log(Level.SEVERE, "File not found.", c);
+        }
+    }
+
+    public void await_input() throws JaxException, IOException, ClassNotFoundException {
         Scanner userInput = new Scanner(System.in);
         while (true) {
             try {
@@ -180,10 +226,12 @@ public class Jax {
         }
     }
 
-    public static void main(String[] args) throws JaxException {
+    public static void main(String[] args) throws JaxException, IOException, ClassNotFoundException {
         Jax bot = new Jax();
-        bot.greet();
+        bot.on_startup();
+//        bot.greet();
         bot.await_input();
-        bot.exit();
+//        bot.exit();
+        bot.on_shutdown();
     }
 }
