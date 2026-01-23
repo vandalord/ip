@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.time.format.DateTimeParseException;
 
 public class Jax {
 
@@ -116,7 +117,12 @@ public class Jax {
         if (segments.length < 2) {
             throw new JaxException("Error - Deadline time not specified.");
         }
-        insert_task(new Deadline(segments[0], segments[1]));
+
+        try {
+            insert_task(new Deadline(segments[0], segments[1]));
+        } catch (DateTimeParseException e) {
+            throw new JaxException("Error - Invalid Date Format. Please use: yyyy-MM-dd (e.g., 2019-10-15 1800)");
+        }
     }
 
     public void parse_event(String[] input) throws JaxException {
@@ -131,7 +137,12 @@ public class Jax {
         if (toSplit.length < 2) {
             throw new JaxException("Error - End time not specified.");
         }
-        insert_task(new Event(fromSplit[0], toSplit[0], toSplit[1]));
+
+        try {
+            insert_task(new Event(fromSplit[0], toSplit[0], toSplit[1]));
+        } catch (DateTimeParseException e) {
+            throw new JaxException("Error - Invalid Date Format. Please use: yyyy-MM-dd (e.g., 2019-10-15 1800)");
+        }
     }
 
     public void on_startup() throws IOException, ClassNotFoundException {
