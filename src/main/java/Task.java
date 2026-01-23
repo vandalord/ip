@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.time.LocalDate;
 
 public class Task implements Serializable {
 
@@ -14,7 +15,7 @@ public class Task implements Serializable {
         return (isDone ? "[X]" : "[ ]");
     }
 
-    public boolean mark_task() {
+    public boolean markTask() {
         if (isDone) {
             return false;
         }
@@ -22,12 +23,16 @@ public class Task implements Serializable {
         return true;
     }
 
-    public boolean unmark_task() {
+    public boolean unmarkTask() {
         if (!isDone) {
             return false;
         }
         isDone = false;
         return true;
+    }
+
+    public boolean occursOn(LocalDate date) {
+        return false;
     }
 
     @Override
