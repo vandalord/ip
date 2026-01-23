@@ -1,58 +1,33 @@
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 public class Jax {
 
+    private Ui ui;
+
+    public Jax() {
+        ui = new Ui();
+    }
+
     private static final Logger log = Logger.getLogger(Jax.class.getName());
 
-    static String separator = "―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――";
-    static String savefile_url = "savefile.txt";
+    static String savefileURL = "savefile.txt";
 
     ArrayList<Task> tasks = new ArrayList<>();
 
-    public void greet() {
-        // Start-up message text
-        echo(" \uD83D\uDC4B你好! I'm Jax, your personal assistant chatbot!'\n"
-                + " What can I do for you?", 4);
-    }
-
-    public void exit() {
-        // Exit message text
-        echo(" \uD83D\uDC4B再见. Hope to see you again soon!", 4);
-    }
-
-    public void echo(String text, int indentLevel) {
-        StringBuilder sb = new StringBuilder();
-        String newLine = System.lineSeparator();
-        String indent = " ".repeat(Math.max(0, indentLevel));
-
-        sb.append(indent).append(separator).append(newLine);
-
-        if (text != null && !text.isEmpty()) {
-            text.lines().forEach(line ->
-                    sb.append(indent)
-                            .append(line)
-                            .append(newLine)
-            );
-        }
-
-        sb.append(indent).append(separator).append(newLine);
-
-        System.out.print(sb);
-    }
-
-    public void insert_task(Task task) {
+    public void insertTask(Task task) {
         tasks.add(task);
-        echo("added: " + task + "\nNow you have " + tasks.size() + " tasks in the list", 4);
+        ui.echo("added: " + task + "\nNow you have " + tasks.size() + " tasks in the list", 4);
     }
 
-    public void print_list() {
+    public void printTasks() {
         if (tasks.isEmpty()) {
-            echo("List is empty.", 4);
+            ui.echo("List is empty.", 4);
             return;
         }
         StringBuilder sb = new StringBuilder("Here are the tasks in your list:\n");
@@ -60,38 +35,66 @@ public class Jax {
             sb.append((i + 1)).append(".").append(tasks.get(i));
             if (i < tasks.size() - 1) sb.append("\n");
         }
-        echo(sb.toString(), 4);
+        ui.echo(sb.toString(), 4);
     }
 
-    public void mark_task(int cur) throws JaxException {
+    public void printTasksByDate(String[] input) throws JaxException {
+        if (input.length < 2) {
+            throw new JaxException("Error - Please specify a date (yyyy-MM-dd).");
+        }
+
+        LocalDate queryDate;
+        try {
+            queryDate = LocalDate.parse(input[1]); // Expecting yyyy-MM-dd
+        } catch (DateTimeParseException e) {
+            throw new JaxException("Error - Invalid date format. Use yyyy-MM-dd.");
+        }
+
+        StringBuilder sb = new StringBuilder("Reminders for " + queryDate + ":\n");
+        int count = 0;
+        for (Task t : tasks) {
+            if (t.occursOn(queryDate)) {
+                count++;
+                sb.append(count).append(".").append(t).append("\n");
+            }
+        }
+
+        if (count == 0) {
+            ui.echo("No tasks found on this date.", 4);
+        } else {
+            ui.echo(sb.toString().trim(), 4);
+        }
+    }
+
+    public void markTask(int cur) throws JaxException {
 
         if (cur < 0 || cur >= tasks.size()) {
             throw new JaxException("Error - Invalid task number.");
         }
 
         Task curr = tasks.get(cur);
-        if (curr.mark_task()) {
-            echo("Nice! I've marked this task as done:\n" + curr, 4);
+        if (curr.markTask()) {
+            ui.echo("Nice! I've marked this task as done:\n" + curr, 4);
         } else {
-            echo("This task has already been marked done:\n" + curr, 4);
+            ui.echo("This task has already been marked done:\n" + curr, 4);
         }
     }
 
-    public void unmark_task(int cur) throws JaxException {
+    public void unmarkTask(int cur) throws JaxException {
 
         if (cur < 0 || cur >= tasks.size()) {
             throw new JaxException("Error - Invalid task number.");
         }
 
         Task curr = tasks.get(cur);
-        if (curr.unmark_task()) {
-            echo("OK, I've marked this task as not done yet:\n" + curr, 4);
+        if (curr.unmarkTask()) {
+            ui.echo("OK, I've marked this task as not done yet:\n" + curr, 4);
         } else {
-            echo("This task hasn't been marked done:\n" + curr, 4);
+            ui.echo("This task hasn't been marked done:\n" + curr, 4);
         }
     }
 
-    public void delete_task(int index) throws JaxException {
+    public void deleteTask(int index) throws JaxException {
         if (index < 0 || index >= tasks.size()) {
             throw new JaxException("Error - Invalid task number.");
         }
@@ -99,17 +102,17 @@ public class Jax {
         Task removedTask = tasks.get(index);
         tasks.remove(index);
 
-        echo("Noted. I've removed this task:\n  " + removedTask + "\nNow you have " + tasks.size() + " tasks in the list.", 4);
+        ui.echo("Noted. I've removed this task:\n  " + removedTask + "\nNow you have " + tasks.size() + " tasks in the list.", 4);
     }
 
-    public void parse_todo(String[] input) throws JaxException {
+    public void parseTodo(String[] input) throws JaxException {
         if (input.length < 2 || input[1].trim().isEmpty()) {
             throw new JaxException("Error - Todo description cannot be empty.");
         }
-        insert_task(new Todo(input[1]));
+        insertTask(new Todo(input[1]));
     }
 
-    public void parse_deadline(String[] input) throws JaxException {
+    public void parseDeadline(String[] input) throws JaxException {
         if (input.length < 2 || input[1].trim().isEmpty()) {
             throw new JaxException("Error - Deadline description cannot be empty.");
         }
@@ -119,13 +122,13 @@ public class Jax {
         }
 
         try {
-            insert_task(new Deadline(segments[0], segments[1]));
+            insertTask(new Deadline(segments[0], segments[1]));
         } catch (DateTimeParseException e) {
             throw new JaxException("Error - Invalid Date Format. Please use: yyyy-MM-dd (e.g., 2019-10-15 1800)");
         }
     }
 
-    public void parse_event(String[] input) throws JaxException {
+    public void parseEvent(String[] input) throws JaxException {
         if (input.length < 2 || input[1].trim().isEmpty()) {
             throw new JaxException("Error - Event description cannot be empty.");
         }
@@ -139,25 +142,25 @@ public class Jax {
         }
 
         try {
-            insert_task(new Event(fromSplit[0], toSplit[0], toSplit[1]));
+            insertTask(new Event(fromSplit[0], toSplit[0], toSplit[1]));
         } catch (DateTimeParseException e) {
             throw new JaxException("Error - Invalid Date Format. Please use: yyyy-MM-dd (e.g., 2019-10-15 1800)");
         }
     }
 
-    public void on_startup() throws IOException, ClassNotFoundException {
-        read_savefile();
-        greet();
+    public void onStartup() {
+        readSavefile();
+        ui.greet();
     }
 
-    public void on_shutdown() throws IOException, ClassNotFoundException {
-        write_savefile();
-        exit();
+    public void onShutdown() {
+        writeSavefile();
+        ui.exit();
     }
 
-    public void write_savefile() throws IOException, ClassNotFoundException {
-        try (FileOutputStream fos = new FileOutputStream(savefile_url);
-             ObjectOutputStream oos = new ObjectOutputStream(fos);) {
+    public void writeSavefile() {
+        try (FileOutputStream fos = new FileOutputStream(savefileURL);
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(tasks);
         } catch (FileNotFoundException e) {
             log.log(Level.SEVERE, "File not found: ", e);
@@ -168,14 +171,14 @@ public class Jax {
     }
 
     @SuppressWarnings("unchecked")
-    public void read_savefile() throws IOException, ClassNotFoundException {
-        File f = new File(savefile_url);
+    public void readSavefile() {
+        File f = new File(savefileURL);
         if (!f.exists()) {
             return;
         }
 
-        try (FileInputStream fis = new FileInputStream(savefile_url);
-             ObjectInputStream ois = new ObjectInputStream(fis);) {
+        try (FileInputStream fis = new FileInputStream(savefileURL);
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
             tasks = (ArrayList<Task>) ois.readObject();
         } catch (IOException ioe) {
             log.log(Level.SEVERE, "Error reading data : ", ioe);
@@ -185,7 +188,7 @@ public class Jax {
         }
     }
 
-    public void await_input() throws JaxException, IOException, ClassNotFoundException {
+    public void awaitInput() {
         Scanner userInput = new Scanner(System.in);
         while (true) {
             try {
@@ -205,44 +208,45 @@ public class Jax {
                     case BYE:
                         return;
                     case LIST:
-                        print_list();
+                        printTasks();
+                        break;
+                    case REMIND:
+                        printTasksByDate(input);
                         break;
                     case MARK:
                     case UNMARK:
                     case DELETE:
                         if (input.length < 2) throw new JaxException("Error - Specify a task number.");
                         try {
-                            int task_idx = Integer.parseInt(input[1]) - 1;
-                            if (command == Command.MARK) mark_task(task_idx);
-                            else if (command == Command.UNMARK) unmark_task(task_idx);
-                            else delete_task(task_idx);
+                            int taskIndex = Integer.parseInt(input[1]) - 1;
+                            if (command == Command.MARK) markTask(taskIndex);
+                            else if (command == Command.UNMARK) unmarkTask(taskIndex);
+                            else deleteTask(taskIndex);
                         } catch (NumberFormatException e) {
                             throw new JaxException("Error - Invalid task number.");
                         }
                         break;
                     case TODO:
-                        parse_todo(input);
+                        parseTodo(input);
                         break;
                     case DEADLINE:
-                        parse_deadline(input);
+                        parseDeadline(input);
                         break;
                     case EVENT:
-                        parse_event(input);
+                        parseEvent(input);
                         break;
                 }
             }
             catch (JaxException e) {
-                echo(e.getMessage(), 4);
+                ui.echo(e.getMessage(), 4);
             }
         }
     }
 
-    public static void main(String[] args) throws JaxException, IOException, ClassNotFoundException {
+    public static void main(String[] args) {
         Jax bot = new Jax();
-        bot.on_startup();
-//        bot.greet();
-        bot.await_input();
-//        bot.exit();
-        bot.on_shutdown();
+        bot.onStartup();
+        bot.awaitInput();
+        bot.onShutdown();
     }
 }
