@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.util.Scanner;
+
 public class Ui {
 
     static String separator = "―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――";
@@ -11,6 +14,12 @@ public class Ui {
     public void exit() {
         // Exit message text
         echo(" \uD83D\uDC4B再见. Hope to see you again soon!", 4);
+    }
+
+    public String readCommand() {
+        Scanner userInput = new Scanner(System.in);
+        String line = userInput.nextLine();
+        return line;
     }
 
     public void echo(String text, int indentLevel) {
@@ -27,6 +36,10 @@ public class Ui {
         }
         sb.append(indent).append(separator).append(newLine);
         System.out.print(sb);
+    }
+
+    public void showError(String error) {
+         echo(error, 4);
     }
 }
 

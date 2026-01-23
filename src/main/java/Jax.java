@@ -1,24 +1,18 @@
 import java.io.*;
-import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 public class Jax {
 
+    private Storage storage;
     private Ui ui;
+    ArrayList<Task> tasks;
 
     public Jax() {
-        ui = new Ui();
+        this.ui = new Ui();
+        this.storage = new Storage();
     }
-
-    private static final Logger log = Logger.getLogger(Jax.class.getName());
-
-    static String savefileURL = "savefile.txt";
-
-    ArrayList<Task> tasks = new ArrayList<>();
 
     public void insertTask(Task task) {
         tasks.add(task);
@@ -148,51 +142,21 @@ public class Jax {
         }
     }
 
-    public void onStartup() {
-        readSavefile();
+    public void onStartup() throws JaxException {
+        tasks = storage.readSavefile();
         ui.greet();
     }
 
-    public void onShutdown() {
-        writeSavefile();
+    public void onShutdown() throws JaxException {
+        storage.writeSavefile(tasks);
         ui.exit();
     }
 
-    public void writeSavefile() {
-        try (FileOutputStream fos = new FileOutputStream(savefileURL);
-             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-            oos.writeObject(tasks);
-        } catch (FileNotFoundException e) {
-            log.log(Level.SEVERE, "File not found: ", e);
-            throw new RuntimeException(e);
-        } catch (IOException ioe) {
-            log.log(Level.SEVERE, "Error writing data : ", ioe);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public void readSavefile() {
-        File f = new File(savefileURL);
-        if (!f.exists()) {
-            return;
-        }
-
-        try (FileInputStream fis = new FileInputStream(savefileURL);
-             ObjectInputStream ois = new ObjectInputStream(fis)) {
-            tasks = (ArrayList<Task>) ois.readObject();
-        } catch (IOException ioe) {
-            log.log(Level.SEVERE, "Error reading data : ", ioe);
-            throw new RuntimeException(ioe);
-        } catch (ClassNotFoundException c) {
-            log.log(Level.SEVERE, "File not found.", c);
-        }
-    }
 
     public void awaitInput() {
-        Scanner userInput = new Scanner(System.in);
         while (true) {
             try {
-                String line = userInput.nextLine();
+                String line = ui.readCommand();
                 String[] input = line.split(" ", 2);
                 String commandStr = input[0].toUpperCase();
 
@@ -245,8 +209,12 @@ public class Jax {
 
     public static void main(String[] args) {
         Jax bot = new Jax();
-        bot.onStartup();
-        bot.awaitInput();
-        bot.onShutdown();
+        try {
+            bot.onStartup();
+            bot.awaitInput();
+            bot.onShutdown();
+        } catch (JaxException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
