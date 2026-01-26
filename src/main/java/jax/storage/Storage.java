@@ -1,6 +1,11 @@
+package jax.storage;
+
+
+import jax.task.Task;
+import jax.JaxException;
+
 import java.io.*;
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 public class Storage {
 
