@@ -1,4 +1,4 @@
-# Jax User Guide
+# jax.Jax User Guide
 
 // Update the title above to match the actual product name
 

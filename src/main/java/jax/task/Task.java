@@ -1,3 +1,5 @@
+package jax.task;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 
