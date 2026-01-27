@@ -24,18 +24,18 @@ public class Parser {
 
     public static Todo parseTodo(String[] input) throws JaxException {
         if (input.length < 2 || input[1].trim().isEmpty()) {
-            throw new JaxException("Error - jax.task.Todo description cannot be empty.");
+            throw new JaxException("Error - Todo description cannot be empty.");
         }
         return new Todo(input[1]);
     }
 
     public static Deadline parseDeadline(String[] input) throws JaxException {
         if (input.length < 2 || input[1].trim().isEmpty()) {
-            throw new JaxException("Error - jax.task.Deadline description cannot be empty.");
+            throw new JaxException("Error - Deadline description cannot be empty.");
         }
         String[] segments = input[1].split(" /by ");
         if (segments.length < 2) {
-            throw new JaxException("Error - jax.task.Deadline time not specified.");
+            throw new JaxException("Error - Deadline time not specified.");
         }
         try {
             return new Deadline(segments[0], segments[1]);
@@ -46,7 +46,7 @@ public class Parser {
 
     public static Event parseEvent(String[] input) throws JaxException {
         if (input.length < 2 || input[1].trim().isEmpty()) {
-            throw new JaxException("Error - jax.task.Event description cannot be empty.");
+            throw new JaxException("Error - Event description cannot be empty.");
         }
         String[] fromSplit = input[1].split(" /from ");
         if (fromSplit.length < 2) {
