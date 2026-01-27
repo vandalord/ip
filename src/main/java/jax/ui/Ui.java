@@ -19,8 +19,10 @@ public class Ui {
 
     public String readCommand() {
         Scanner userInput = new Scanner(System.in);
-        String line = userInput.nextLine();
-        return line;
+        if (userInput.hasNextLine()) {
+            return userInput.nextLine().trim();
+        }
+        return null;
     }
 
     public void echo(String text, int indentLevel) {
