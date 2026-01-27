@@ -1,4 +1,5 @@
-import java.io.IOException;
+package jax.ui;
+
 import java.util.Scanner;
 
 public class Ui {
@@ -7,7 +8,7 @@ public class Ui {
 
     public void greet() {
         // Start-up message text
-        echo(" \uD83D\uDC4B你好! I'm Jax, your personal assistant chatbot!'\n"
+        echo(" \uD83D\uDC4B你好! I'm jax.Jax, your personal assistant chatbot!\n"
                 + " What can I do for you?", 4);
     }
 
@@ -18,8 +19,10 @@ public class Ui {
 
     public String readCommand() {
         Scanner userInput = new Scanner(System.in);
-        String line = userInput.nextLine();
-        return line;
+        if (userInput.hasNextLine()) {
+            return userInput.nextLine().trim();
+        }
+        return null;
     }
 
     public void echo(String text, int indentLevel) {

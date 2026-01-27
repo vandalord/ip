@@ -1,5 +1,9 @@
-import java.io.*;
-import java.time.format.DateTimeParseException;
+package jax;
+
+import jax.command.Command;
+import jax.storage.Storage;
+import jax.task.TaskList;
+import jax.ui.Ui;
 
 public class Jax {
 
@@ -11,10 +15,10 @@ public class Jax {
         this.ui = new Ui();
         this.storage = new Storage();
         try {
-            tasks = new TaskList(storage.readSavefile(), ui);
+            tasks = new TaskList(storage.readSavefile(), ui, this.storage);
         } catch (JaxException e) {
             ui.showError(e.getMessage());
-            tasks = new TaskList(ui);
+            tasks = new TaskList(ui, this.storage);
         }
     }
 
@@ -32,6 +36,11 @@ public class Jax {
         while (true) {
             try {
                 String line = ui.readCommand();
+
+                if (line == null) {
+                    return;
+                }
+
                 Command command = Parser.parseCommand(line);
                 String[] input = Parser.splitCommand(line);
 

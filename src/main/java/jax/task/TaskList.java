@@ -1,3 +1,9 @@
+package jax.task;
+
+import jax.ui.Ui;
+import jax.JaxException;
+import jax.storage.Storage;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -6,20 +12,33 @@ public class TaskList {
 
     private ArrayList<Task> tasks;
     Ui ui;
+    private Storage storage;
 
-    public TaskList(Ui ui) {
+    public TaskList(Ui ui, Storage storage) {
         this.tasks = new ArrayList<>();
+        this.storage = storage;
         this.ui = ui;
     }
 
-    public TaskList(ArrayList<Task> tasks, Ui ui) {
+    public TaskList(ArrayList<Task> tasks, Ui ui, Storage storage) {
         this.tasks = tasks;
+        this.storage = storage;
         this.ui = ui;
+    }
+
+    private void save() {
+        try {
+            storage.writeSavefile(tasks);
+        } catch (JaxException e) {
+            ui.echo("Warning: Failed to save changes to file!", 4);
+        }
     }
 
     public void insertTask(Task task) {
         tasks.add(task);
+        save();
         ui.echo("added: " + task + "\nNow you have " + tasks.size() + " tasks in the list", 4);
+
     }
 
     public ArrayList<Task> getTasks() {
@@ -75,6 +94,7 @@ public class TaskList {
 
         Task curr = tasks.get(cur);
         if (curr.markTask()) {
+            save();
             ui.echo("Nice! I've marked this task as done:\n" + curr, 4);
         } else {
             ui.echo("This task has already been marked done:\n" + curr, 4);
@@ -89,6 +109,7 @@ public class TaskList {
 
         Task curr = tasks.get(cur);
         if (curr.unmarkTask()) {
+            save();
             ui.echo("OK, I've marked this task as not done yet:\n" + curr, 4);
         } else {
             ui.echo("This task hasn't been marked done:\n" + curr, 4);
@@ -102,6 +123,7 @@ public class TaskList {
 
         Task removedTask = tasks.get(index);
         tasks.remove(index);
+        save();
 
         ui.echo("Noted. I've removed this task:\n  " + removedTask + "\nNow you have " + tasks.size() + " tasks in the list.", 4);
     }

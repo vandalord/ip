@@ -1,3 +1,5 @@
+package jax.command;
+
 public enum Command {
     BYE,
     LIST,
