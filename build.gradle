@@ -33,6 +33,7 @@ application {
 
 shadowJar {
     archiveBaseName = "jax"
+    archiveFileName = "Jax.jar"
     archiveClassifier = null
 }
 
