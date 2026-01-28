@@ -45,36 +45,36 @@ public class Jax {
                 String[] input = Parser.splitCommand(line);
 
                 switch (command) {
-                    case BYE:
-                        return;
-                    case LIST:
-                        tasks.printTasks();
-                        break;
-                    case REMIND:
-                        tasks.printTasksByDate(input);
-                        break;
-                    case MARK:
-                    case UNMARK:
-                    case DELETE:
-                        if (input.length < 2) throw new JaxException("Error - Specify a task number.");
-                        try {
-                            int taskIndex = Integer.parseInt(input[1]) - 1;
-                            if (command == Command.MARK) tasks.markTask(taskIndex);
-                            else if (command == Command.UNMARK) tasks.unmarkTask(taskIndex);
-                            else tasks.deleteTask(taskIndex);
-                        } catch (NumberFormatException e) {
-                            throw new JaxException("Error - Invalid task number.");
-                        }
-                        break;
-                    case TODO:
-                        tasks.insertTask(Parser.parseTodo(input));
-                        break;
-                    case DEADLINE:
-                        tasks.insertTask(Parser.parseDeadline(input));
-                        break;
-                    case EVENT:
-                        tasks.insertTask(Parser.parseEvent(input));
-                        break;
+                case BYE:
+                    return;
+                case LIST:
+                    tasks.printTasks();
+                    break;
+                case REMIND:
+                    tasks.printTasksByDate(input);
+                    break;
+                case MARK:
+                case UNMARK:
+                case DELETE:
+                    if (input.length < 2) throw new JaxException("Error - Specify a task number.");
+                    try {
+                        int taskIndex = Integer.parseInt(input[1]) - 1;
+                        if (command == Command.MARK) tasks.markTask(taskIndex);
+                        else if (command == Command.UNMARK) tasks.unmarkTask(taskIndex);
+                        else tasks.deleteTask(taskIndex);
+                    } catch (NumberFormatException e) {
+                        throw new JaxException("Error - Invalid task number.");
+                    }
+                    break;
+                case TODO:
+                    tasks.insertTask(Parser.parseTodo(input));
+                    break;
+                case DEADLINE:
+                    tasks.insertTask(Parser.parseDeadline(input));
+                    break;
+                case EVENT:
+                    tasks.insertTask(Parser.parseEvent(input));
+                    break;
                 }
             }
             catch (JaxException e) {
