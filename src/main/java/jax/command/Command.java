@@ -10,4 +10,5 @@ public enum Command {
     DEADLINE,
     EVENT,
     REMIND,
+    FIND,
 }

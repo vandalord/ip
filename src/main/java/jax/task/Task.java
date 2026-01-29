@@ -37,6 +37,10 @@ public class Task implements Serializable {
         return false;
     }
 
+    public boolean contains(String search) {
+        return this.description.contains(search);
+    }
+
     @Override
     public String toString() {
         return getStatusIcon() + " " +  description;
