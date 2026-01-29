@@ -38,7 +38,7 @@ public class Task implements Serializable {
     }
 
     public boolean contains(String search) {
-        return this.description.contains(search);
+        return this.description.toLowerCase().contains(search.toLowerCase());
     }
 
     @Override
