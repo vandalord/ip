@@ -11,6 +11,7 @@ import java.util.ArrayList;
 /**
  * Contains the task list and operations to modify it (add, delete, mark).
  */
+@SuppressWarnings("FieldMayBeFinal")
 public class TaskList {
 
     private ArrayList<Task> tasks;
@@ -53,7 +54,7 @@ public class TaskList {
 
     /**
      * Getter all tasks currently in the list.
-     * @return Array of all tasks.
+     * @return ArrayList<Task> of all tasks.
      */
     public ArrayList<Task> getTasks() {
         return tasks;

@@ -5,6 +5,7 @@ import jax.storage.Storage;
 import jax.task.TaskList;
 import jax.ui.Ui;
 
+@SuppressWarnings("FieldMayBeFinal")
 public class Jax {
 
     private Storage storage;

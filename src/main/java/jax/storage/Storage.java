@@ -11,6 +11,7 @@ import java.util.ArrayList;
 /**
  * Handles the loading and saving of task data to persistent memory.
  */
+@SuppressWarnings("FieldMayBeFinal")
 public class Storage {
 
     private static String savefileURL = "savefile.txt";
