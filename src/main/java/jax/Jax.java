@@ -5,6 +5,9 @@ import jax.storage.Storage;
 import jax.task.TaskList;
 import jax.ui.Ui;
 
+/**
+ * Contains the chatbot run functions, encompassing interactive processes.
+ */
 @SuppressWarnings("FieldMayBeFinal")
 public class Jax {
 
