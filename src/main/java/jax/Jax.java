@@ -77,6 +77,7 @@ public class Jax {
                     break;
                 case FIND:
                     tasks.findTask(input);
+                    break;
                 }
             }
             catch (JaxException e) {
