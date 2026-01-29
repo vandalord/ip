@@ -9,7 +9,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 /**
- * Contains the task list and operations to modify it (add, delete, mark).
+ * Contains the task list and operations to modify it (add, delete, mark, find).
  */
 public class TaskList {
 
@@ -160,5 +160,35 @@ public class TaskList {
         save();
 
         ui.echo("Noted. I've removed this task:\n  " + removedTask + "\nNow you have " + tasks.size() + " tasks in the list.", 4);
+    }
+
+    /**
+     * Deletes a task from the list at the specified index.
+     * @param searchString Keyword for task
+     */
+    public void findTask(String[] searchString) throws JaxException {
+
+        if (searchString.length < 2) {
+            throw new JaxException("Error - Please specify a single keyword.");
+        }
+
+        if (searchString.length > 2) {
+            throw new JaxException("Error - Insert a single keyword.");
+        }
+
+        StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:\n");
+        int count = 0;
+        for (Task t : tasks) {
+            if (t.contains(searchString[1])) {
+                count++;
+                sb.append(count).append(".").append(t).append("\n");
+            }
+        }
+
+        if (count == 0) {
+            ui.echo("No tasks found with this keyword.", 4);
+        } else {
+            ui.echo(sb.toString().trim(), 4);
+        }
     }
 }

@@ -15,7 +15,7 @@ public class Ui {
      */
     public void greet() {
         // Start-up message text
-        echo(" \uD83D\uDC4B你好! I'm jax.Jax, your personal assistant chatbot!\n"
+        echo(" \uD83D\uDC4B你好! I'm Jax, your personal assistant chatbot!\n"
                 + " What can I do for you?", 4);
     }
 

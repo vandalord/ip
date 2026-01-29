@@ -75,6 +75,8 @@ public class Jax {
                 case EVENT:
                     tasks.insertTask(Parser.parseEvent(input));
                     break;
+                case FIND:
+                    tasks.findTask(input);
                 }
             }
             catch (JaxException e) {
