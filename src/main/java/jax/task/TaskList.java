@@ -8,6 +8,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
+/**
+ * Contains the task list and operations to modify it (add, delete, mark).
+ */
+@SuppressWarnings("FieldMayBeFinal")
 public class TaskList {
 
     private ArrayList<Task> tasks;
@@ -26,6 +30,9 @@ public class TaskList {
         this.ui = ui;
     }
 
+    /**
+     * Helper function to link tasklist to storage.
+     */
     private void save() {
         try {
             storage.writeSavefile(tasks);
@@ -34,17 +41,28 @@ public class TaskList {
         }
     }
 
+
+    /**
+     * Insert task object into tasklist, printing success.
+     * @param task New task to be added to tasklist.
+     */
     public void insertTask(Task task) {
         tasks.add(task);
         save();
         ui.echo("added: " + task + "\nNow you have " + tasks.size() + " tasks in the list", 4);
-
     }
 
+    /**
+     * Getter all tasks currently in the list.
+     * @return ArrayList<Task> of all tasks.
+     */
     public ArrayList<Task> getTasks() {
         return tasks;
     }
 
+    /**
+     * Prints all tasks currently in the list formatted as a numbered list.
+     */
     public void printTasks() {
         if (tasks.isEmpty()) {
             ui.echo("List is empty.", 4);
@@ -58,6 +76,10 @@ public class TaskList {
         ui.echo(sb.toString(), 4);
     }
 
+    /**
+     * Prints all tasks currently in the list formatted as a numbered list.
+     * @param input Datetime in String format.
+     */
     public void printTasksByDate(String[] input) throws JaxException {
         if (input.length < 2) {
             throw new JaxException("Error - Please specify a date (yyyy-MM-dd).");
@@ -86,6 +108,10 @@ public class TaskList {
         }
     }
 
+    /**
+     * Marks tasks based on the index given.
+     * @param cur Index of task to be marked.
+     */
     public void markTask(int cur) throws JaxException {
 
         if (cur < 0 || cur >= tasks.size()) {
@@ -101,6 +127,10 @@ public class TaskList {
         }
     }
 
+    /**
+     * Unmarks tasks based on the index given.
+     * @param cur Index of task to be unmarked.
+     */
     public void unmarkTask(int cur) throws JaxException {
 
         if (cur < 0 || cur >= tasks.size()) {
@@ -116,6 +146,11 @@ public class TaskList {
         }
     }
 
+    /**
+     * Deletes a task from the list at the specified index.
+     * @param index Index of the task to delete.
+     * @throws JaxException If the index is out of range.
+     */
     public void deleteTask(int index) throws JaxException {
         if (index < 0 || index >= tasks.size()) {
             throw new JaxException("Error - Invalid task number.");

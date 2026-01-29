@@ -18,7 +18,7 @@ public class Parser {
         }
     }
 
-    public static String[] splitCommand(String line) throws JaxException {
+    public static String[] splitCommand(String line) {
         return line.split(" ", 2);
     }
 

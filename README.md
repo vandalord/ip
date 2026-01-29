@@ -2,12 +2,12 @@
 
 This is a project template for a greenfield Java project. It's named after the Java mascot _Duke_. Given below are instructions on how to use it.
 
-## Setting up in Intellij
+## Setting up in IntelliJ
 
-Prerequisites: JDK 17, update Intellij to the most recent version.
+Prerequisites: JDK 17, update IntelliJ to the most recent version.
 
-1. Open Intellij (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project first)
-2. Open the project into Intellij as follows:
+1. Open IntelliJ (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project first)
+2. Open the project into IntelliJ as follows:
    1. Click `Open`.
    2. Select the project directory, and click `OK`.
    3. If there are any further prompts, accept the defaults.
