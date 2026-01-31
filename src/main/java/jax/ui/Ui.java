@@ -8,7 +8,7 @@ import java.util.Scanner;
  */
 public class Ui {
 
-    static String separator = "―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――";
+    private static final String SEPERATOR = "―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――";
 
     /**
      * Displays the welcome message to user.
@@ -47,7 +47,7 @@ public class Ui {
         StringBuilder sb = new StringBuilder();
         String newLine = System.lineSeparator();
         String indent = " ".repeat(Math.max(0, indentLevel));
-        sb.append(indent).append(separator).append(newLine);
+        sb.append(indent).append(SEPERATOR).append(newLine);
         if (text != null && !text.isEmpty()) {
             text.lines().forEach(line ->
                     sb.append(indent)
@@ -55,7 +55,7 @@ public class Ui {
                             .append(newLine)
             );
         }
-        sb.append(indent).append(separator).append(newLine);
+        sb.append(indent).append(SEPERATOR).append(newLine);
         System.out.print(sb);
     }
 

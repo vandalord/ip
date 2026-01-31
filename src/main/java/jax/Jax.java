@@ -6,15 +6,25 @@ import jax.task.TaskList;
 import jax.ui.Ui;
 
 /**
- * Contains the chatbot run functions, encompassing interactive processes.
+ * Main entry point and controller for the Jax chatbot application.
+ * This class coordinates between the User Interface (Ui), the data Storage, and the TaskList logic.
+ * It handles the main execution loop processing user commands until termination.
  */
 @SuppressWarnings("FieldMayBeFinal")
 public class Jax {
 
+    /** Handles loading and saving tasks to the file system. */
     private Storage storage;
+    /** Handles interactions with the user (input/output). */
     private Ui ui;
+    /** Contains the list of tasks and business logic for task manipulation. */
     private TaskList tasks;
 
+    /**
+     * Initializes the chatbot components.
+     * Attempts to load existing tasks from the save file. If loading fails
+     * (e.g., file not found or corrupted), it initializes with an empty task list.
+     */
     public Jax() {
         this.ui = new Ui();
         this.storage = new Storage();
@@ -26,16 +36,32 @@ public class Jax {
         }
     }
 
+    /**
+     * Performs necessary startup operations.
+     * Loads the save file and displays the welcome greeting to the user.
+     * @throws JaxException If there is an error reading the save file.
+     */
     public void onStartup() throws JaxException {
         storage.readSavefile();
         ui.greet();
     }
 
+    /**
+     * Performs cleanup operations before the application exits.
+     * Saves the current state of the task list to the hard disk and displays the exit message.
+     * @throws JaxException If there is an error writing to the save file.
+     */
     public void onShutdown() throws JaxException {
         storage.writeSavefile(tasks.getTasks());
         ui.exit();
     }
 
+    /**
+     * The main execution loop of the application.
+     * Continuously reads user input, parses commands, executes the corresponding
+     * task operations, and handles any exceptions that arise during execution.
+     * The loop terminates when the user issues the 'BYE' command.
+     */
     public void awaitInput() {
         while (true) {
             try {
@@ -60,12 +86,18 @@ public class Jax {
                 case MARK:
                 case UNMARK:
                 case DELETE:
-                    if (input.length < 2) throw new JaxException("Error - Specify a task number.");
+                    if (input.length < 2) {
+                        throw new JaxException("Error - Specify a task number.");
+                    }
                     try {
                         int taskIndex = Integer.parseInt(input[1]) - 1;
-                        if (command == Command.MARK) tasks.markTask(taskIndex);
-                        else if (command == Command.UNMARK) tasks.unmarkTask(taskIndex);
-                        else tasks.deleteTask(taskIndex);
+                        if (command == Command.MARK) {
+                            tasks.markTask(taskIndex);
+                        } else if (command == Command.UNMARK) {
+                            tasks.unmarkTask(taskIndex);
+                        } else {
+                            tasks.deleteTask(taskIndex);
+                        }
                     } catch (NumberFormatException e) {
                         throw new JaxException("Error - Invalid task number.");
                     }
@@ -82,15 +114,19 @@ public class Jax {
                 case FIND:
                     tasks.findTask(input);
                     break;
+                default:
+                    throw new JaxException("Error - Unknown command.");
                 }
-            }
-            catch (JaxException e) {
+            } catch (JaxException e) {
                 ui.echo(e.getMessage(), 4);
             }
         }
     }
 
-    public static void main(String[] args) {
+    /**
+     * The main method that launches the application.
+     */
+    public static void main() {
         Jax bot = new Jax();
         try {
             bot.onStartup();
