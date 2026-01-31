@@ -1,13 +1,26 @@
 package jax;
 
+import java.time.format.DateTimeParseException;
+
 import jax.command.Command;
 import jax.task.Deadline;
 import jax.task.Event;
 import jax.task.Todo;
 
-import java.time.format.DateTimeParseException;
 
+/**
+ * Parses user input into actionable commands and task objects.
+ * This class handles the logic of deciphering strings into specific operations
+ * and validating the format of arguments (like dates and descriptions).
+ */
 public class Parser {
+
+    /**
+     * Parses the first word of the user's input to determine the command type.
+     * @param line The full raw input string entered by the user.
+     * @return The corresponding {@link Command} enum value.
+     * @throws JaxException If the command word is not recognized or invalid.
+     */
     public static Command parseCommand(String line) throws JaxException {
         String[] input = line.split(" ", 2);
         String commandStr = input[0].toUpperCase();
@@ -18,10 +31,22 @@ public class Parser {
         }
     }
 
+    /**
+     * Splits the user's input line into two parts: the command word and the arguments.
+     * @param line The full raw input string.
+     * @return A String array of size 2. Index 0 is the command, Index 1 is the rest of the string.
+     */
     public static String[] splitCommand(String line) {
         return line.split(" ", 2);
     }
 
+    /**
+     * Parses the arguments for a Todo task.
+     * Validates that the description is not empty.
+     * @param input The split input array where index 1 contains the description.
+     * @return A new {@link Todo} object.
+     * @throws JaxException If the description is missing or empty.
+     */
     public static Todo parseTodo(String[] input) throws JaxException {
         if (input.length < 2 || input[1].trim().isEmpty()) {
             throw new JaxException("Error - Todo description cannot be empty.");
@@ -29,6 +54,13 @@ public class Parser {
         return new Todo(input[1]);
     }
 
+    /**
+     * Parses the arguments for a Deadline task.
+     * Splits the arguments by the "/by" delimiter to separate description and time.
+     * @param input The split input array where index 1 contains the arguments.
+     * @return A new {@link Deadline} object.
+     * @throws JaxException If the description is empty, the time is missing, or the date format is invalid.
+     */
     public static Deadline parseDeadline(String[] input) throws JaxException {
         if (input.length < 2 || input[1].trim().isEmpty()) {
             throw new JaxException("Error - Deadline description cannot be empty.");
@@ -44,6 +76,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses the arguments for an Event task.
+     * Splits the arguments by "/from" and "/to" delimiters to extract timing details.
+     * @param input The split input array where index 1 contains the arguments.
+     * @return A new {@link Event} object.
+     * @throws JaxException If the description, start time, or end time are missing, or if date formats are invalid.
+     */
     public static Event parseEvent(String[] input) throws JaxException {
         if (input.length < 2 || input[1].trim().isEmpty()) {
             throw new JaxException("Error - Event description cannot be empty.");

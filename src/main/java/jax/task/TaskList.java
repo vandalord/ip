@@ -1,12 +1,12 @@
 package jax.task;
 
-import jax.ui.Ui;
-import jax.JaxException;
-import jax.storage.Storage;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+
+import jax.JaxException;
+import jax.storage.Storage;
+import jax.ui.Ui;
 
 /**
  * Contains the task list and operations to modify it (add, delete, mark, find).
@@ -15,15 +15,26 @@ import java.util.ArrayList;
 public class TaskList {
 
     private ArrayList<Task> tasks;
-    Ui ui;
+    private Ui ui;
     private Storage storage;
 
+    /**
+     * Instantiates a new TaskList object from the current tasks.
+     * @param ui Current UI instance.
+     * @param storage Current Storage instance.
+     */
     public TaskList(Ui ui, Storage storage) {
         this.tasks = new ArrayList<>();
         this.storage = storage;
         this.ui = ui;
     }
 
+    /**
+     * Instantiates a TaskList object from the current tasks.
+     * @param tasks The ArrayList of tasks to be passed into TaskList.
+     * @param ui Current UI instance.
+     * @param storage Current Storage instance.
+     */
     public TaskList(ArrayList<Task> tasks, Ui ui, Storage storage) {
         this.tasks = tasks;
         this.storage = storage;
@@ -54,7 +65,7 @@ public class TaskList {
 
     /**
      * Getter all tasks currently in the list.
-     * @return ArrayList<Task> of all tasks.
+     * @return ArrayList object of all tasks.
      */
     public ArrayList<Task> getTasks() {
         return tasks;
@@ -69,9 +80,11 @@ public class TaskList {
             return;
         }
         StringBuilder sb = new StringBuilder("Here are the tasks in your list:\n");
-        for(int i = 0; i < tasks.size(); i++) {
+        for (int i = 0; i < tasks.size(); i++) {
             sb.append((i + 1)).append(".").append(tasks.get(i));
-            if (i < tasks.size() - 1) sb.append("\n");
+            if (i < tasks.size() - 1) {
+                sb.append("\n");
+            }
         }
         ui.echo(sb.toString(), 4);
     }
@@ -160,7 +173,11 @@ public class TaskList {
         tasks.remove(index);
         save();
 
-        ui.echo("Noted. I've removed this task:\n  " + removedTask + "\nNow you have " + tasks.size() + " tasks in the list.", 4);
+        ui.echo("Noted. I've removed this task:\n  "
+                + removedTask
+                + "\nNow you have "
+                + tasks.size()
+                + " tasks in the list.", 4);
     }
 
     /**

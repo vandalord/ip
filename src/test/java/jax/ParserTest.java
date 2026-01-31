@@ -1,10 +1,12 @@
 package jax;
 
-import jax.command.Command;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
+
+import org.junit.jupiter.api.Test;
+
+import jax.command.Command;
 
 public class ParserTest {
 
@@ -40,6 +42,7 @@ public class ParserTest {
 
         JaxException thrown = assertThrows(JaxException.class, () -> Parser.parseDeadline(input));
 
-        assertEquals("Error - Invalid Date Format. Please use: yyyy-MM-dd (e.g., 2019-10-15 1800)", thrown.getMessage());
+        assertEquals("Error - Invalid Date Format. Please use: yyyy-MM-dd (e.g., 2019-10-15 1800)",
+            thrown.getMessage());
     }
 }
