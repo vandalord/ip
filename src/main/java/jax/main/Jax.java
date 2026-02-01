@@ -1,4 +1,4 @@
-package jax;
+package jax.main;
 
 import jax.command.Command;
 import jax.storage.Storage;

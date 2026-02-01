@@ -1,4 +1,4 @@
-package jax;
+package jax.main;
 
 import java.time.format.DateTimeParseException;
 
