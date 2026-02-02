@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import jax.main.Jax;
 
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -11,6 +13,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
+import jax.main.JaxException;
+
 
 /**
  * Controller for the main GUI.
@@ -28,7 +33,7 @@ public class MainWindow extends AnchorPane {
     private Jax jax;
 
     private final Image userImage = new Image(Objects.requireNonNull(this.getClass().getResourceAsStream("/images/DaUser.png")));
-    private final Image dukeImage = new Image(Objects.requireNonNull(this.getClass().getResourceAsStream("/images/DaDuke.png")));
+    private final Image jaxImage = new Image(Objects.requireNonNull(this.getClass().getResourceAsStream("/images/DaDuke.png")));
 
     @FXML
     public void initialize() {
@@ -38,6 +43,31 @@ public class MainWindow extends AnchorPane {
     /** Injects the Jax instance */
     public void setJax(Jax d) {
         jax = d;
+        showJaxMessage(jax.getGreeting());
+    }
+
+    /**
+     * Helper method to display the user's message.
+     */
+    private void showUserMessage(String message) {
+        if (message == "") {
+            return;
+        }
+        dialogContainer.getChildren().add(
+                DialogBox.getUserDialog(message, userImage)
+        );
+    }
+
+    /**
+     * Helper method to display the bot's message.
+     */
+    private void showJaxMessage(String message) {
+        if (message == "") {
+            return;
+        }
+        dialogContainer.getChildren().add(
+                DialogBox.getJaxDialog(message, jaxImage)
+        );
     }
 
     /**
@@ -46,12 +76,45 @@ public class MainWindow extends AnchorPane {
      */
     @FXML
     private void handleUserInput() {
-        String input = userInput.getText();
+        String input = userInput.getText().trim();
         String response = jax.getResponse(input);
-        dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getDukeDialog(response, dukeImage)
-        );
+
+        if (input.isEmpty()) {
+            return;
+        }
+
+        showUserMessage(input);
+        showJaxMessage(response);
+
         userInput.clear();
+
+        if (input.trim().equalsIgnoreCase("bye")) {
+            showJaxMessage((jax.getGoodbye()));
+            exit();
+        }
+
+        if (input.equalsIgnoreCase("clear")) {
+            dialogContainer.getChildren().clear();
+            userInput.clear();
+        }
+    }
+
+    /**
+     * Handles cleanup and exit logic.
+     */
+    private void exit() {
+        double delayTime = 1.5;
+
+        try {
+            jax.saveData();
+        } catch (JaxException e) {
+            showJaxMessage("Error: Could not save data!\n" + e.getMessage());
+
+            delayTime = 3.0;
+        } finally {
+            PauseTransition delay = new PauseTransition(Duration.seconds(delayTime));
+            delay.setOnFinished(event -> Platform.exit());
+            delay.play();
+        }
     }
 }

@@ -102,4 +102,18 @@ public class Parser {
             throw new JaxException("Error - Invalid Date Format. Please use: yyyy-MM-dd (e.g., 2019-10-15 1800)");
         }
     }
+    /**
+     * Parses the keyword for finding task.
+     * Splits the arguments " " delimiters to extract keyword.
+     * @param input The split input array where index 1 contains the arguments.
+     * @return keyword in the String format.
+     * @throws JaxException If no keywords are present.
+     */
+    public static String parseFind(String[] input) throws JaxException {
+        if (input.length < 2 || input[1].trim().isEmpty()) {
+            throw new JaxException("Error - Please specify a keyword to search for.");
+        }
+
+        return input[1].trim();
+    }
 }
