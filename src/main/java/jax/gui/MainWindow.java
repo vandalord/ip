@@ -49,25 +49,29 @@ public class MainWindow extends AnchorPane {
     /**
      * Helper method to display the user's message.
      */
-    private void showUserMessage(String message) {
-        if (message == "") {
-            return;
+    private void showUserMessage(String ... messages) {
+        for (String m : messages) {
+            if (m == "") {
+                return;
+            }
+            dialogContainer.getChildren().add(
+                    DialogBox.getUserDialog(m, jaxImage)
+            );
         }
-        dialogContainer.getChildren().add(
-                DialogBox.getUserDialog(message, userImage)
-        );
     }
 
     /**
      * Helper method to display the bot's message.
      */
-    private void showJaxMessage(String message) {
-        if (message == "") {
-            return;
+    private void showJaxMessage(String ... messages) {
+        for (String m : messages) {
+            if (m == "") {
+                return;
+            }
+            dialogContainer.getChildren().add(
+                    DialogBox.getJaxDialog(m, jaxImage)
+            );
         }
-        dialogContainer.getChildren().add(
-                DialogBox.getJaxDialog(message, jaxImage)
-        );
     }
 
     /**
