@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 
 import jax.command.Command;
+import jax.main.JaxException;
+import jax.main.Parser;
 
 public class ParserTest {
 

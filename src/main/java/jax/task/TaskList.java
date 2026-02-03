@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
-import jax.JaxException;
+import jax.main.JaxException;
 import jax.storage.Storage;
 import jax.ui.Ui;
 
@@ -57,10 +57,10 @@ public class TaskList {
      * Insert task object into tasklist, printing success.
      * @param task New task to be added to tasklist.
      */
-    public void insertTask(Task task) {
+    public String insertTask(Task task) {
         tasks.add(task);
         save();
-        ui.echo("added: " + task + "\nNow you have " + tasks.size() + " tasks in the list", 4);
+        return ("added: " + task + "\nNow you have " + tasks.size() + " tasks in the list");
     }
 
     /**
@@ -74,10 +74,9 @@ public class TaskList {
     /**
      * Prints all tasks currently in the list formatted as a numbered list.
      */
-    public void printTasks() {
+    public String printTasks() {
         if (tasks.isEmpty()) {
-            ui.echo("List is empty.", 4);
-            return;
+            return "List is empty.";
         }
         StringBuilder sb = new StringBuilder("Here are the tasks in your list:\n");
         for (int i = 0; i < tasks.size(); i++) {
@@ -86,14 +85,14 @@ public class TaskList {
                 sb.append("\n");
             }
         }
-        ui.echo(sb.toString(), 4);
+        return sb.toString();
     }
 
     /**
      * Prints all tasks currently in the list formatted as a numbered list.
      * @param input Datetime in String format.
      */
-    public void printTasksByDate(String[] input) throws JaxException {
+    public String printTasksByDate(String[] input) throws JaxException {
         if (input.length < 2) {
             throw new JaxException("Error - Please specify a date (yyyy-MM-dd).");
         }
@@ -115,9 +114,9 @@ public class TaskList {
         }
 
         if (count == 0) {
-            ui.echo("No tasks found on this date.", 4);
+            return "No tasks found on this date.";
         } else {
-            ui.echo(sb.toString().trim(), 4);
+            return sb.toString().trim();
         }
     }
 
@@ -125,7 +124,7 @@ public class TaskList {
      * Marks tasks based on the index given.
      * @param cur Index of task to be marked.
      */
-    public void markTask(int cur) throws JaxException {
+    public String markTask(int cur) throws JaxException {
 
         if (cur < 0 || cur >= tasks.size()) {
             throw new JaxException("Error - Invalid task number.");
@@ -134,9 +133,9 @@ public class TaskList {
         Task curr = tasks.get(cur);
         if (curr.markTask()) {
             save();
-            ui.echo("Nice! I've marked this task as done:\n" + curr, 4);
+            return "Nice! I've marked this task as done:\n" + curr;
         } else {
-            ui.echo("This task has already been marked done:\n" + curr, 4);
+            return "This task has already been marked done:\n" + curr;
         }
     }
 
@@ -144,7 +143,7 @@ public class TaskList {
      * Unmarks tasks based on the index given.
      * @param cur Index of task to be unmarked.
      */
-    public void unmarkTask(int cur) throws JaxException {
+    public String unmarkTask(int cur) throws JaxException {
 
         if (cur < 0 || cur >= tasks.size()) {
             throw new JaxException("Error - Invalid task number.");
@@ -153,9 +152,9 @@ public class TaskList {
         Task curr = tasks.get(cur);
         if (curr.unmarkTask()) {
             save();
-            ui.echo("OK, I've marked this task as not done yet:\n" + curr, 4);
+            return "OK, I've marked this task as not done yet:\n" + curr;
         } else {
-            ui.echo("This task hasn't been marked done:\n" + curr, 4);
+            return "This task hasn't been marked done:\n" + curr;
         }
     }
 
@@ -164,7 +163,7 @@ public class TaskList {
      * @param index Index of the task to delete.
      * @throws JaxException If the index is out of range.
      */
-    public void deleteTask(int index) throws JaxException {
+    public String deleteTask(int index) throws JaxException {
         if (index < 0 || index >= tasks.size()) {
             throw new JaxException("Error - Invalid task number.");
         }
@@ -173,40 +172,32 @@ public class TaskList {
         tasks.remove(index);
         save();
 
-        ui.echo("Noted. I've removed this task:\n  "
+        return ("Noted. I've removed this task:\n  "
                 + removedTask
                 + "\nNow you have "
                 + tasks.size()
-                + " tasks in the list.", 4);
+                + " tasks in the list.");
     }
 
     /**
      * Deletes a task from the list at the specified index.
-     * @param searchString Keyword for task
+     * @param keyword Keyword for task
      */
-    public void findTask(String[] searchString) throws JaxException {
-
-        if (searchString.length < 2) {
-            throw new JaxException("Error - Please specify a single keyword.");
-        }
-
-        if (searchString.length > 2) {
-            throw new JaxException("Error - Insert a single keyword.");
-        }
+    public String findTask(String keyword) throws JaxException {
 
         StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:\n");
         int count = 0;
         for (Task t : tasks) {
-            if (t.contains(searchString[1])) {
+            if (t.contains(keyword)) {
                 count++;
                 sb.append(count).append(".").append(t).append("\n");
             }
         }
 
         if (count == 0) {
-            ui.echo("No tasks found with this keyword.", 4);
+            return "No tasks found with this keyword.";
         } else {
-            ui.echo(sb.toString().trim(), 4);
+            return sb.toString().trim();
         }
     }
 }

@@ -4,6 +4,7 @@ package jax.command;
  * Enum of Jax commands accepted.
  */
 public enum Command {
+    HELLO,
     BYE,
     LIST,
     MARK,
@@ -14,4 +15,6 @@ public enum Command {
     EVENT,
     REMIND,
     FIND,
+    HELP,
+    CLEAR,
 }

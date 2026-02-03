@@ -1,4 +1,4 @@
-package jax;
+package jax.main;
 
 import jax.command.Command;
 import jax.storage.Storage;
@@ -20,6 +20,22 @@ public class Jax {
     /** Contains the list of tasks and business logic for task manipulation. */
     private TaskList tasks;
 
+    private final static String GREET = "\uD83D\uDC4B你好! I'm Jax, your personal assistant chatbot!\n"
+                                    + "What can I do for you?";
+    private final static String GOODBYE = "\uD83D\uDC4B再见. Hope to see you again soon!"
+                                    + "Closing in 3 seconds..." ;
+    private final static String HELP_MESSAGE = "Here are the commands you can use:\n"
+            + "1.  todo <description>\n"
+            + "2.  deadline <desc> /by <yyyy-MM-dd>\n"
+            + "3.  event <desc> /from <yyyy-MM-dd> /to <yyyy-MM-dd>\n"
+            + "4.  list\n"
+            + "5.  mark <index>\n"
+            + "6.  unmark <index>\n"
+            + "7.  delete <index>\n"
+            + "8.  find <keyword>\n"
+            + "9.  clear\n"
+            + "10. bye";
+
     /**
      * Initializes the chatbot components.
      * Attempts to load existing tasks from the save file. If loading fails
@@ -37,6 +53,20 @@ public class Jax {
     }
 
     /**
+     * Returns the welcome message for the GUI to display.
+     */
+    public String getGreeting() {
+        return GREET;
+    }
+
+    /**
+     * Returns the ending message for the GUI to display.
+     */
+    public String getGoodbye() {
+        return GOODBYE;
+    }
+
+    /**
      * Performs necessary startup operations.
      * Loads the save file and displays the welcome greeting to the user.
      * @throws JaxException If there is an error reading the save file.
@@ -51,38 +81,28 @@ public class Jax {
      * Saves the current state of the task list to the hard disk and displays the exit message.
      * @throws JaxException If there is an error writing to the save file.
      */
-    public void onShutdown() throws JaxException {
+    public void saveData() throws JaxException {
         storage.writeSavefile(tasks.getTasks());
-        ui.exit();
     }
 
     /**
-     * The main execution loop of the application.
-     * Continuously reads user input, parses commands, executes the corresponding
-     * task operations, and handles any exceptions that arise during execution.
-     * The loop terminates when the user issues the 'BYE' command.
+     * Generates a response for the user's chat message.
      */
-    public void awaitInput() {
-        while (true) {
-            try {
-                String line = ui.readCommand();
-
-                if (line == null) {
-                    return;
-                }
-
+    public String getResponse(String line) {
+        try {
                 Command command = Parser.parseCommand(line);
                 String[] input = Parser.splitCommand(line);
 
                 switch (command) {
+                case HELLO:
+                    return getGreeting();
+                case CLEAR:
                 case BYE:
-                    return;
+                    return "";
                 case LIST:
-                    tasks.printTasks();
-                    break;
+                    return tasks.printTasks();
                 case REMIND:
-                    tasks.printTasksByDate(input);
-                    break;
+                    return tasks.printTasksByDate(input);
                 case MARK:
                 case UNMARK:
                 case DELETE:
@@ -92,48 +112,31 @@ public class Jax {
                     try {
                         int taskIndex = Integer.parseInt(input[1]) - 1;
                         if (command == Command.MARK) {
-                            tasks.markTask(taskIndex);
+                            return tasks.markTask(taskIndex);
                         } else if (command == Command.UNMARK) {
-                            tasks.unmarkTask(taskIndex);
+                            return tasks.unmarkTask(taskIndex);
                         } else {
-                            tasks.deleteTask(taskIndex);
+                            return tasks.deleteTask(taskIndex);
                         }
                     } catch (NumberFormatException e) {
                         throw new JaxException("Error - Invalid task number.");
                     }
-                    break;
                 case TODO:
-                    tasks.insertTask(Parser.parseTodo(input));
-                    break;
+                    return tasks.insertTask(Parser.parseTodo(input));
                 case DEADLINE:
-                    tasks.insertTask(Parser.parseDeadline(input));
-                    break;
+                    return tasks.insertTask(Parser.parseDeadline(input));
                 case EVENT:
-                    tasks.insertTask(Parser.parseEvent(input));
-                    break;
+                    return tasks.insertTask(Parser.parseEvent(input));
                 case FIND:
-                    tasks.findTask(input);
-                    break;
+                    String keyword = Parser.parseFind(input);
+                    return tasks.findTask(keyword);
+                case HELP:
+                    return HELP_MESSAGE;
                 default:
-                    throw new JaxException("Error - Unknown command.");
+                    return "Error - Unknown command.";
                 }
             } catch (JaxException e) {
-                ui.echo(e.getMessage(), 4);
+                return e.getMessage();
             }
-        }
-    }
-
-    /**
-     * The main method that launches the application.
-     */
-    public static void main() {
-        Jax bot = new Jax();
-        try {
-            bot.onStartup();
-            bot.awaitInput();
-            bot.onShutdown();
-        } catch (JaxException e) {
-            System.out.println(e.getMessage());
-        }
     }
 }
