@@ -129,7 +129,7 @@ public class Jax {
                     return tasks.insertTask(Parser.parseEvent(input));
                 case FIND:
                     String keyword = Parser.parseFind(input);
-                    return tasks.findTask(keyword);
+                    return tasks.findTasks(keyword);
                 case HELP:
                     return HELP_MESSAGE;
                 default:

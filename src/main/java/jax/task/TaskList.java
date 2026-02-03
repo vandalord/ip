@@ -44,7 +44,7 @@ public class TaskList {
     /**
      * Helper function to link tasklist to storage.
      */
-    private void save() {
+    private void saveToStorage() {
         try {
             storage.writeSavefile(tasks);
         } catch (JaxException e) {
@@ -59,7 +59,7 @@ public class TaskList {
      */
     public String insertTask(Task task) {
         tasks.add(task);
-        save();
+        saveToStorage();
         return ("added: " + task + "\nNow you have " + tasks.size() + " tasks in the list");
     }
 
@@ -151,7 +151,7 @@ public class TaskList {
 
         Task curr = tasks.get(cur);
         if (curr.unmarkTask()) {
-            save();
+            saveToStorage();
             return "OK, I've marked this task as not done yet:\n" + curr;
         } else {
             return "This task hasn't been marked done:\n" + curr;
@@ -170,7 +170,7 @@ public class TaskList {
 
         Task removedTask = tasks.get(index);
         tasks.remove(index);
-        save();
+        saveToStorage();
 
         return ("Noted. I've removed this task:\n  "
                 + removedTask
@@ -183,7 +183,7 @@ public class TaskList {
      * Deletes a task from the list at the specified index.
      * @param keyword Keyword for task
      */
-    public String findTask(String keyword) throws JaxException {
+    public String findTasks(String keyword) throws JaxException {
 
         StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:\n");
         int count = 0;
