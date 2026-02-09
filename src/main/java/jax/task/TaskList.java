@@ -132,7 +132,7 @@ public class TaskList {
 
         Task curr = tasks.get(cur);
         if (curr.markTask()) {
-            save();
+            saveToStorage();
             return "Nice! I've marked this task as done:\n" + curr;
         } else {
             return "This task has already been marked done:\n" + curr;
