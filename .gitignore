@@ -17,6 +17,4 @@ bin/
 text-ui-test/EXPECTED-UNIX.TXT
 
 # Temporary/Test Savefiles
-savefile.txt
-placeholder_contacts.txt
-placeholder_tasks.txt
+*.txt
