@@ -1,6 +1,8 @@
 package jax.main;
 
 import jax.command.Command;
+import jax.contact.Contact;
+import jax.contact.ContactList;
 import jax.storage.Storage;
 import jax.task.TaskList;
 import jax.ui.Ui;
@@ -19,6 +21,8 @@ public class Jax {
     private Ui ui;
     /** Contains the list of tasks and business logic for task manipulation. */
     private TaskList tasks;
+
+    private ContactList contacts;
 
     private final static String GREET = "\uD83D\uDC4B你好! I'm Jax, your personal assistant chatbot!\n"
                                     + "What can I do for you?";
@@ -45,10 +49,16 @@ public class Jax {
         this.ui = new Ui();
         this.storage = new Storage();
         try {
-            tasks = new TaskList(storage.readSavefile(), ui, this.storage);
+            tasks = new TaskList(storage.loadTasks(), ui, this.storage);
         } catch (JaxException e) {
             ui.showError(e.getMessage());
             tasks = new TaskList(ui, this.storage);
+        }
+
+        try {
+            contacts = new ContactList(storage.loadContacts(), ui, this.storage);
+        } catch (JaxException e) {
+            contacts = new ContactList(ui, this.storage);
         }
     }
 
@@ -67,22 +77,13 @@ public class Jax {
     }
 
     /**
-     * Performs necessary startup operations.
-     * Loads the save file and displays the welcome greeting to the user.
-     * @throws JaxException If there is an error reading the save file.
-     */
-    public void onStartup() throws JaxException {
-        storage.readSavefile();
-        ui.greet();
-    }
-
-    /**
      * Performs cleanup operations before the application exits.
      * Saves the current state of the task list to the hard disk and displays the exit message.
      * @throws JaxException If there is an error writing to the save file.
      */
     public void saveData() throws JaxException {
-        storage.writeSavefile(tasks.getTasks());
+        storage.saveTasks(tasks.getTasks());
+        storage.saveContacts(contacts.getContacts());
     }
 
     /**
@@ -130,6 +131,14 @@ public class Jax {
                 case FIND:
                     String keyword = Parser.parseFind(input);
                     return tasks.findTasks(keyword);
+                case CONTACT:
+                    Contact newContact = Parser.parseContact(input);
+                    return contacts.insertContact(newContact);
+                case CONTACTS:
+                    return contacts.printContacts();
+                case DELETE_CONTACT:
+                    String nameToDelete = Parser.parseDeleteContact(input);
+                    return contacts.deleteContact(nameToDelete);
                 case HELP:
                     return HELP_MESSAGE;
                 default:

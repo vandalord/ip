@@ -46,7 +46,7 @@ public class TaskList {
      */
     private void saveToStorage() {
         try {
-            storage.writeSavefile(tasks);
+            storage.saveTasks(tasks);
         } catch (JaxException e) {
             ui.echo("Warning: Failed to save changes to file!", 4);
         }
