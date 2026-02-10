@@ -130,7 +130,7 @@ public class Parser {
         String fullDetails = input[1];
 
         try {
-            // Split by the phone and email delimiters
+
             String name = fullDetails.split(" /p ")[0].trim();
             String contactInfo = fullDetails.split(" /p ")[1];
             String phone = contactInfo.split(" /e ")[0].trim();

@@ -29,17 +29,6 @@ public class Contact implements Serializable {
     }
 
     /**
-     * Creates a new Contact with the specified name and contact number.
-     * @param name The name of the contact.
-     * @param contactNumber The contact number of the contact.
-     */
-    public Contact(String name, String contactNumber) {
-        this.name = name;
-        this.contactNumber =  contactNumber;
-        this.category = null;
-    }
-
-    /**
      * Getter for contact name.
      */
     public String getName() {

@@ -17,8 +17,6 @@ public class Jax {
 
     /** Handles loading and saving tasks to the file system. */
     private Storage storage;
-    /** Handles interactions with the user (input/output). */
-    private Ui ui;
     /** Contains the list of tasks and business logic for task manipulation. */
     private TaskList tasks;
 
@@ -49,19 +47,17 @@ public class Jax {
      * (e.g., file not found or corrupted), it initializes with an empty task list.
      */
     public Jax() {
-        this.ui = new Ui();
         this.storage = new Storage();
         try {
-            tasks = new TaskList(storage.loadTasks(), ui, this.storage);
+            tasks = new TaskList(storage.loadTasks(), this.storage);
         } catch (JaxException e) {
-            ui.showError(e.getMessage());
-            tasks = new TaskList(ui, this.storage);
+            tasks = new TaskList(this.storage);
         }
 
         try {
-            contacts = new ContactList(storage.loadContacts(), ui, this.storage);
+            contacts = new ContactList(storage.loadContacts(), this.storage);
         } catch (JaxException e) {
-            contacts = new ContactList(ui, this.storage);
+            contacts = new ContactList(this.storage);
         }
     }
 
@@ -139,7 +135,7 @@ public class Jax {
                     return contacts.insertContact(newContact);
                 case CONTACTS:
                     return contacts.printContacts();
-                case DELETE_CONTACT:
+                case DELCONTACT:
                     String nameToDelete = Parser.parseDeleteContact(input);
                     return contacts.deleteContact(nameToDelete);
                 case HELP:

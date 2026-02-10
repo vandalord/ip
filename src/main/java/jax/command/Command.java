@@ -19,5 +19,5 @@ public enum Command {
     CLEAR,
     CONTACT,
     CONTACTS,
-    DELETE_CONTACT,
+    DELCONTACT,
 }
