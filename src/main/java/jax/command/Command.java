@@ -17,4 +17,7 @@ public enum Command {
     FIND,
     HELP,
     CLEAR,
+    CONTACT,
+    CONTACTS,
+    DELCONTACT,
 }

@@ -3,6 +3,7 @@ package jax.main;
 import java.time.format.DateTimeParseException;
 
 import jax.command.Command;
+import jax.contact.Contact;
 import jax.task.Deadline;
 import jax.task.Event;
 import jax.task.Todo;
@@ -114,6 +115,45 @@ public class Parser {
             throw new JaxException("Error - Please specify a keyword to search for.");
         }
 
+        return input[1].trim();
+    }
+
+    /**
+     * Parses user input into a Contact object.
+     * Expected format: contact <name> /p <phone> /e <email>
+     */
+    public static Contact parseContact(String[] input) throws JaxException {
+        if (input.length < 2) {
+            throw new JaxException("Error - Contact command format: contact <name> /p <phone> /e <email>");
+        }
+
+        String fullDetails = input[1];
+
+        try {
+
+            String name = fullDetails.split(" /p ")[0].trim();
+            String contactInfo = fullDetails.split(" /p ")[1];
+            String phone = contactInfo.split(" /e ")[0].trim();
+            String email = contactInfo.split(" /e ")[1].trim();
+
+            if (name.isEmpty() || phone.isEmpty() || email.isEmpty()) {
+                throw new JaxException("Error - Name, phone, and email cannot be empty.");
+            }
+
+            return new Contact(name, phone, email);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new JaxException("Error - Missing /p or /e flags for contact details.");
+        }
+    }
+
+    /**
+     * Extracts the contact name for deletion.
+     * Expected format: delcontact <name>
+     */
+    public static String parseDeleteContact(String[] input) throws JaxException {
+        if (input.length < 2 || input[1].trim().isEmpty()) {
+            throw new JaxException("Error - Please specify a contact name to delete.");
+        }
         return input[1].trim();
     }
 }

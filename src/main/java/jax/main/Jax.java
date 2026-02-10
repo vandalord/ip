@@ -1,6 +1,8 @@
 package jax.main;
 
 import jax.command.Command;
+import jax.contact.Contact;
+import jax.contact.ContactList;
 import jax.storage.Storage;
 import jax.task.TaskList;
 import jax.ui.Ui;
@@ -15,14 +17,14 @@ public class Jax {
 
     /** Handles loading and saving tasks to the file system. */
     private Storage storage;
-    /** Handles interactions with the user (input/output). */
-    private Ui ui;
     /** Contains the list of tasks and business logic for task manipulation. */
     private TaskList tasks;
 
+    private ContactList contacts;
+
     private final static String GREET = "\uD83D\uDC4B你好! I'm Jax, your personal assistant chatbot!\n"
                                     + "What can I do for you?";
-    private final static String GOODBYE = "\uD83D\uDC4B再见. Hope to see you again soon!"
+    private final static String GOODBYE = "\uD83D\uDC4B再见. Hope to see you again soon!\n"
                                     + "Closing in 3 seconds..." ;
     private final static String HELP_MESSAGE = "Here are the commands you can use:\n"
             + "1.  todo <description>\n"
@@ -34,7 +36,10 @@ public class Jax {
             + "7.  delete <index>\n"
             + "8.  find <keyword>\n"
             + "9.  clear\n"
-            + "10. bye";
+            + "10. contact <name> /p <phone> /e <email>\n"
+            + "11. delcontact <name>\n"
+            + "12. contacts\n"
+            + "13. bye";
 
     /**
      * Initializes the chatbot components.
@@ -42,13 +47,17 @@ public class Jax {
      * (e.g., file not found or corrupted), it initializes with an empty task list.
      */
     public Jax() {
-        this.ui = new Ui();
         this.storage = new Storage();
         try {
-            tasks = new TaskList(storage.readSavefile(), ui, this.storage);
+            tasks = new TaskList(storage.loadTasks(), this.storage);
         } catch (JaxException e) {
-            ui.showError(e.getMessage());
-            tasks = new TaskList(ui, this.storage);
+            tasks = new TaskList(this.storage);
+        }
+
+        try {
+            contacts = new ContactList(storage.loadContacts(), this.storage);
+        } catch (JaxException e) {
+            contacts = new ContactList(this.storage);
         }
     }
 
@@ -67,22 +76,13 @@ public class Jax {
     }
 
     /**
-     * Performs necessary startup operations.
-     * Loads the save file and displays the welcome greeting to the user.
-     * @throws JaxException If there is an error reading the save file.
-     */
-    public void onStartup() throws JaxException {
-        storage.readSavefile();
-        ui.greet();
-    }
-
-    /**
      * Performs cleanup operations before the application exits.
      * Saves the current state of the task list to the hard disk and displays the exit message.
      * @throws JaxException If there is an error writing to the save file.
      */
     public void saveData() throws JaxException {
-        storage.writeSavefile(tasks.getTasks());
+        storage.saveTasks(tasks.getTasks());
+        storage.saveContacts(contacts.getContacts());
     }
 
     /**
@@ -130,6 +130,14 @@ public class Jax {
                 case FIND:
                     String keyword = Parser.parseFind(input);
                     return tasks.findTasks(keyword);
+                case CONTACT:
+                    Contact newContact = Parser.parseContact(input);
+                    return contacts.insertContact(newContact);
+                case CONTACTS:
+                    return contacts.printContacts();
+                case DELCONTACT:
+                    String nameToDelete = Parser.parseDeleteContact(input);
+                    return contacts.deleteContact(nameToDelete);
                 case HELP:
                     return HELP_MESSAGE;
                 default:

@@ -15,18 +15,15 @@ import jax.ui.Ui;
 public class TaskList {
 
     private ArrayList<Task> tasks;
-    private Ui ui;
     private Storage storage;
 
     /**
      * Instantiates a new TaskList object from the current tasks.
-     * @param ui Current UI instance.
      * @param storage Current Storage instance.
      */
-    public TaskList(Ui ui, Storage storage) {
+    public TaskList(Storage storage) {
         this.tasks = new ArrayList<>();
         this.storage = storage;
-        this.ui = ui;
     }
 
     /**
@@ -35,21 +32,16 @@ public class TaskList {
      * @param ui Current UI instance.
      * @param storage Current Storage instance.
      */
-    public TaskList(ArrayList<Task> tasks, Ui ui, Storage storage) {
+    public TaskList(ArrayList<Task> tasks, Storage storage) {
         this.tasks = tasks;
         this.storage = storage;
-        this.ui = ui;
     }
 
     /**
      * Helper function to link tasklist to storage.
      */
-    private void saveToStorage() {
-        try {
-            storage.writeSavefile(tasks);
-        } catch (JaxException e) {
-            ui.echo("Warning: Failed to save changes to file!", 4);
-        }
+    private void saveToStorage() throws JaxException {
+        storage.saveTasks(tasks);
     }
 
 
@@ -57,7 +49,7 @@ public class TaskList {
      * Insert task object into tasklist, printing success.
      * @param task New task to be added to tasklist.
      */
-    public String insertTask(Task task) {
+    public String insertTask(Task task) throws JaxException {
         tasks.add(task);
         saveToStorage();
         return ("added: " + task + "\nNow you have " + tasks.size() + " tasks in the list");

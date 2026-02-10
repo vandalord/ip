@@ -55,7 +55,7 @@ public class MainWindow extends AnchorPane {
                 return;
             }
             dialogContainer.getChildren().add(
-                    DialogBox.getUserDialog(m, jaxImage)
+                    DialogBox.getUserDialog(m, userImage)
             );
         }
     }
