@@ -18,3 +18,4 @@ text-ui-test/EXPECTED-UNIX.TXT
 
 # Temporary/Test Savefiles
 *.txt
+data/

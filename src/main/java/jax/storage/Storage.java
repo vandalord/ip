@@ -26,7 +26,12 @@ public class Storage {
      * Default constructor using standard file names.
      */
     public Storage() {
-        this("placeholder_tasks.txt", "placeholder_contacts.txt");
+        this("data/tasks.txt", "data/contacts.txt");
+
+        File folder = new File("data");
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
     }
 
     /**
