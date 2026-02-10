@@ -19,8 +19,24 @@ import jax.task.Task;
 @SuppressWarnings("FieldMayBeFinal")
 public class Storage {
 
-    private static String TASKS_URL = "tasks.txt";
-    private static String CONTACTS_URL = "contacts.txt";
+    private final String TASKS_URL;
+    private final String CONTACTS_URL;
+
+    /**
+     * Default constructor using standard file names.
+     */
+    public Storage() {
+        this("/placeholder_tasks.txt", "placeholder_contacts.txt");
+    }
+
+    /**
+     * Constructor allowing specific paths for both tasks and contacts.
+     * Useful for redirecting saves during unit testing.
+     */
+    public Storage(String tasksPath, String contactsPath) {
+        this.TASKS_URL = tasksPath;
+        this.CONTACTS_URL = contactsPath;
+    }
 
     /**
      * Generic helper to write any serializable object to a specific path.

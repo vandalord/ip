@@ -47,6 +47,13 @@ public class Contact implements Serializable {
     }
 
     /**
+     * Getter for phone number.
+     */
+    public String getPhoneNumber() {
+        return this.contactNumber;
+    }
+
+    /**
      * Checks if the task description contains the specified search keyword, case-insensitive.
      * @param search The keyword to search for.
      * @return true if the description contains the keyword, false otherwise.
