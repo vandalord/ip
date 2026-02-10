@@ -26,7 +26,7 @@ public class Storage {
      * Default constructor using standard file names.
      */
     public Storage() {
-        this("/placeholder_tasks.txt", "placeholder_contacts.txt");
+        this("placeholder_tasks.txt", "placeholder_contacts.txt");
     }
 
     /**

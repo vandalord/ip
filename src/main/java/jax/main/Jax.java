@@ -26,7 +26,7 @@ public class Jax {
 
     private final static String GREET = "\uD83D\uDC4B你好! I'm Jax, your personal assistant chatbot!\n"
                                     + "What can I do for you?";
-    private final static String GOODBYE = "\uD83D\uDC4B再见. Hope to see you again soon!"
+    private final static String GOODBYE = "\uD83D\uDC4B再见. Hope to see you again soon!\n"
                                     + "Closing in 3 seconds..." ;
     private final static String HELP_MESSAGE = "Here are the commands you can use:\n"
             + "1.  todo <description>\n"
@@ -38,7 +38,10 @@ public class Jax {
             + "7.  delete <index>\n"
             + "8.  find <keyword>\n"
             + "9.  clear\n"
-            + "10. bye";
+            + "10. contact <name> /p <phone> /e <email>\n"
+            + "11. delcontact <name>\n"
+            + "12. contacts\n"
+            + "13. bye";
 
     /**
      * Initializes the chatbot components.
