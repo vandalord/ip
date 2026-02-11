@@ -1,7 +1,6 @@
 package jax.contact;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 /**
  * Represents a generic contact in the Jax application.
