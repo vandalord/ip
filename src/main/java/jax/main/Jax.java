@@ -77,7 +77,7 @@ public class Jax {
 
     /**
      * Performs cleanup operations before the application exits.
-     * Saves the current state of the task list to the hard disk and displays the exit message.
+     * Saves the current state of the task list and contact list to the hard disk and displays the exit message.
      * @throws JaxException If there is an error writing to the save file.
      */
     public void saveData() throws JaxException {
