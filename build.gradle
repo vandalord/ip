@@ -48,6 +48,7 @@ test {
 }
 
 application {
+    applicationDefaultJvmArgs = ['-ea']
     mainClass.set("jax.main.Launcher")
 }
 

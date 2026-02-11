@@ -29,7 +29,6 @@ public class TaskList {
     /**
      * Instantiates a TaskList object from the current tasks.
      * @param tasks The ArrayList of tasks to be passed into TaskList.
-     * @param ui Current UI instance.
      * @param storage Current Storage instance.
      */
     public TaskList(ArrayList<Task> tasks, Storage storage) {
@@ -160,9 +159,13 @@ public class TaskList {
             throw new JaxException("Error - Invalid task number.");
         }
 
+        int initialSize = tasks.size();
+
         Task removedTask = tasks.get(index);
         tasks.remove(index);
         saveToStorage();
+
+        assert tasks.size() == initialSize - 1 : "Task list size did not decrease after deletion";
 
         return ("Noted. I've removed this task:\n  "
                 + removedTask

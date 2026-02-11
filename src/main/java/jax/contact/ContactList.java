@@ -62,8 +62,13 @@ public class ContactList implements Serializable {
             throw new JaxException("Error - Contact not found.");
         }
 
+        int initialSize = contacts.size();
+
         Contact removed = contacts.remove(input);
         saveToStorage();
+
+        assert contacts.size() == initialSize - 1 : "Contact list size did not decrease after deletion";
+
         return ("Noted. Removed: " + removed);
     }
 

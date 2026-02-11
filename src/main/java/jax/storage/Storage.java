@@ -55,10 +55,16 @@ public class Storage {
     }
 
     public void saveTasks(ArrayList<Task> tasks) throws JaxException {
+
+        assert tasks != null : "Task list cannot be null when saving data";
+
         writeToFile(TASKS_URL, tasks);
     }
 
     public void saveContacts(HashMap<String, Contact> contacts) throws JaxException {
+
+        assert contacts != null : "Contact list cannot be null when saving data";
+
         writeToFile(CONTACTS_URL, contacts);
     }
 
