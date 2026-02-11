@@ -51,7 +51,7 @@ public class MainWindow extends AnchorPane {
      */
     private void showUserMessage(String ... messages) {
         for (String m : messages) {
-            if (m == "") {
+            if (m.isEmpty()) {
                 return;
             }
             dialogContainer.getChildren().add(
@@ -65,7 +65,7 @@ public class MainWindow extends AnchorPane {
      */
     private void showJaxMessage(String ... messages) {
         for (String m : messages) {
-            if (m == "") {
+            if (m.isEmpty()) {
                 return;
             }
             dialogContainer.getChildren().add(
@@ -107,6 +107,10 @@ public class MainWindow extends AnchorPane {
      * Handles cleanup and exit logic.
      */
     private void exit() {
+
+        userInput.setDisable(true);
+        sendButton.setDisable(true);
+
         double delayTime = 1.5;
 
         try {

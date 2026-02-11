@@ -1,7 +1,6 @@
 package jax.contact;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 /**
  * Represents a generic contact in the Jax application.
@@ -14,18 +13,18 @@ public class Contact implements Serializable {
     /** The contact number of the contact. */
     protected String contactNumber;
     /** The class or category this contact belongs to, with respect to the user (e.g. Friend, Colleague) */
-    protected String category;
+    protected String email;
 
     /**
      * Creates a new Contact with the specified name, contact number and category.
      * @param name The name of the contact.
      * @param contactNumber The contact number of the contact.
-     * @param category The class or category this contact belongs to.
+     * @param email The email of the contact.
      */
-    public Contact(String name, String contactNumber, String category) {
+    public Contact(String name, String contactNumber, String email) {
         this.name = name;
         this.contactNumber =  contactNumber;
-        this.category = category;
+        this.email = email;
     }
 
     /**
@@ -43,21 +42,12 @@ public class Contact implements Serializable {
     }
 
     /**
-     * Checks if the task description contains the specified search keyword, case-insensitive.
-     * @param search The keyword to search for.
-     * @return true if the description contains the keyword, false otherwise.
-     */
-    public boolean contains(String search) {
-        return this.name.toLowerCase().contains(search.toLowerCase());
-    }
-
-    /**
-     * Returns the string representation of the task.
-     * @return A string in the format "[Status] Description".
+     * Returns the string representation of the Contact.
+     * @return A string in the format "<name> <contact number> <email>".
      */
     @Override
     public String toString() {
-        return this.name + " " + this.contactNumber + " " + this.category;
+        return this.name + " " + this.contactNumber + " " + this.email;
     }
 }
 

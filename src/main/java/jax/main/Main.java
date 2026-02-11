@@ -1,6 +1,9 @@
 package jax.main;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +18,9 @@ import jax.gui.MainWindow;
  */
 public class Main extends Application {
 
-    private Jax jax = new Jax();
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
+
+    private final Jax jax = new Jax();
 
     @Override
     public void start(Stage stage) {
@@ -24,9 +29,12 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
 
-            // Style with CSS
-            String css = this.getClass().getResource("/css/main.css").toExternalForm();
-            scene.getStylesheets().add(css);
+            URL cssUrl = this.getClass().getResource("/css/main.css");
+            if (cssUrl != null) {
+                scene.getStylesheets().add(cssUrl.toExternalForm());
+            } else {
+                logger.warning("CSS file not found. Check path loadout: /css/main.css");
+            }
 
             stage.setScene(scene);
             stage.setMinHeight(220);
@@ -34,7 +42,7 @@ public class Main extends Application {
             fxmlLoader.<MainWindow>getController().setJax(jax);
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Failed to load MainWindow FXML.", e);
         }
     }
 }

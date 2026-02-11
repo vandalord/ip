@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -22,6 +23,8 @@ public class Storage {
     private final String TASKS_URL;
     private final String CONTACTS_URL;
 
+    private static final Logger logger = Logger.getLogger(Storage.class.getName());
+
     /**
      * Default constructor using standard file names.
      */
@@ -30,7 +33,11 @@ public class Storage {
 
         File folder = new File("data");
         if (!folder.exists()) {
-            folder.mkdir();
+            boolean isCreated = folder.mkdir();
+
+            if (!isCreated) {
+                logger.warning("Failed to create 'data' folder! Save files may not work.");
+            }
         }
     }
 
