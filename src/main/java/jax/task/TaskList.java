@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import jax.main.JaxException;
 import jax.storage.Storage;
@@ -31,7 +31,6 @@ public class TaskList {
     /**
      * Instantiates a TaskList object from the current tasks.
      * @param tasks The ArrayList of tasks to be passed into TaskList.
-     * @param ui Current UI instance.
      * @param storage Current Storage instance.
      */
     public TaskList(ArrayList<Task> tasks, Storage storage) {
@@ -188,12 +187,9 @@ public class TaskList {
         }
 
         StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:\n");
-        int count = 1;
 
-        for (Task t : filteredTasks) {
-            sb.append(count).append(".").append(t).append("\n");
-            count++;
-        }
+        IntStream.range(0, filteredTasks.size())
+                .forEach(i -> sb.append(i + 1).append(".").append(filteredTasks.get(i)).append("\n"));
 
         return sb.toString().trim();
     }
