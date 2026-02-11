@@ -17,7 +17,7 @@ public class ContactList implements Serializable {
     private Storage storage;
 
     /**
-     * Instantiates a new TaskList object from the current tasks.
+     * Instantiates a new ContactList object from the current tasks.
      * @param storage Current Storage instance.
      */
     public ContactList(Storage storage) {
@@ -26,8 +26,8 @@ public class ContactList implements Serializable {
     }
 
     /**
-     * Instantiates a TaskList object from the current tasks.
-     * @param contacts The ArrayList of tasks to be passed into TaskList.
+     * Instantiates a ContactList object from the current tasks.
+     * @param contacts The HashMap of contacts to be passed into ContactList.
      * @param storage Current Storage instance.
      */
     public ContactList(HashMap<String, Contact> contacts, Storage storage) {
@@ -36,7 +36,7 @@ public class ContactList implements Serializable {
     }
 
     /**
-     * Helper function to link tasklist to storage.
+     * Helper function to link ContactList to storage.
      */
     private void saveToStorage() throws JaxException {
         storage.saveContacts(contacts);
@@ -68,7 +68,7 @@ public class ContactList implements Serializable {
     }
 
     /**
-     * Getter for all contacts in the list.
+     * Getter for all contacts in the HashMap.
      * @return Collection object of all contacts.
      */
     public HashMap<String, Contact> getContacts() {
