@@ -3,6 +3,8 @@ package jax.task;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
 
 import jax.main.JaxException;
 import jax.storage.Storage;
@@ -179,19 +181,19 @@ public class TaskList {
      */
     public String findTasks(String keyword) throws JaxException {
 
-        StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:\n");
-        int count = 0;
-        for (Task t : tasks) {
-            if (t.contains(keyword)) {
-                count++;
-                sb.append(count).append(".").append(t).append("\n");
-            }
+        List<Task> filteredTasks = tasks.stream()
+                .filter(t -> t.contains(keyword))
+                .toList();
+
+        if (filteredTasks.isEmpty()) {
+            return "No tasks found with this keyword.";
         }
 
-        if (count == 0) {
-            return "No tasks found with this keyword.";
-        } else {
-            return sb.toString().trim();
-        }
+        StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:\n");
+
+        IntStream.range(0, filteredTasks.size())
+                .forEach(i -> sb.append(i + 1).append(".").append(filteredTasks.get(i)).append("\n"));
+
+        return sb.toString().trim();
     }
 }
