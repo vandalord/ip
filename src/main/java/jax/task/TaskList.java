@@ -9,7 +9,6 @@ import java.util.stream.IntStream;
 import jax.main.JaxException;
 import jax.storage.Storage;
 
-
 /**
  * Contains the task list and operations to modify it (add, delete, mark, find).
  */
@@ -161,9 +160,13 @@ public class TaskList {
             throw new JaxException("Error - Invalid task number.");
         }
 
+        int initialSize = tasks.size();
+
         Task removedTask = tasks.get(index);
         tasks.remove(index);
         saveToStorage();
+
+        assert tasks.size() == initialSize - 1 : "Task list size did not decrease after deletion";
 
         return ("Noted. I've removed this task:\n  "
                 + removedTask

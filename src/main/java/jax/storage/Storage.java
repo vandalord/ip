@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -22,6 +23,8 @@ public class Storage {
     private final String TASKS_URL;
     private final String CONTACTS_URL;
 
+    private static final Logger logger = Logger.getLogger(Storage.class.getName());
+
     /**
      * Default constructor using standard file names.
      */
@@ -30,7 +33,11 @@ public class Storage {
 
         File folder = new File("data");
         if (!folder.exists()) {
-            folder.mkdir();
+            boolean isCreated = folder.mkdir();
+
+            if (!isCreated) {
+                logger.warning("Failed to create 'data' folder! Save files may not work.");
+            }
         }
     }
 
@@ -55,10 +62,16 @@ public class Storage {
     }
 
     public void saveTasks(ArrayList<Task> tasks) throws JaxException {
+
+        assert tasks != null : "Task list cannot be null when saving data";
+
         writeToFile(TASKS_URL, tasks);
     }
 
     public void saveContacts(HashMap<String, Contact> contacts) throws JaxException {
+
+        assert contacts != null : "Contact list cannot be null when saving data";
+
         writeToFile(CONTACTS_URL, contacts);
     }
 
@@ -68,7 +81,6 @@ public class Storage {
      * @return Objects loaded from the file.
      * @throws JaxException If the file is corrupted or cannot be read.
      */
-    @SuppressWarnings("unchecked")
     public Object readSavefile(String path) throws JaxException {
 
         File f = new File(path);
@@ -81,7 +93,7 @@ public class Storage {
              ObjectInputStream ois = new ObjectInputStream(fis)) {
             return ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            throw new JaxException("Error reading data.");
+            throw new JaxException("Error reading data from save file");
         }
     }
 
