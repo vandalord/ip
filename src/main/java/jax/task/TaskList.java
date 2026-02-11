@@ -29,7 +29,6 @@ public class TaskList {
     /**
      * Instantiates a TaskList object from the current tasks.
      * @param tasks The ArrayList of tasks to be passed into TaskList.
-     * @param ui Current UI instance.
      * @param storage Current Storage instance.
      */
     public TaskList(ArrayList<Task> tasks, Storage storage) {
