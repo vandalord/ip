@@ -26,7 +26,7 @@ public class ContactListTest {
     @Test
     public void deleteContact_existingName_removesContact() throws JaxException {
         HashMap<String, Contact> map = new HashMap<>();
-        map.put("Cavan", new Contact("Cavan", "111", "c@c.com"));
+        map.put("cavan", new Contact("Cavan", "111", "c@c.com"));
         ContactList cl = new ContactList(map, new Storage());
 
         cl.deleteContact("Cavan");
