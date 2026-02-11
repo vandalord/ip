@@ -1,7 +1,6 @@
 package jax.contact;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 /**
  * Represents a generic contact in the Jax application.
@@ -40,15 +39,6 @@ public class Contact implements Serializable {
      */
     public String getPhoneNumber() {
         return this.contactNumber;
-    }
-
-    /**
-     * Checks if the task description contains the specified search keyword, case-insensitive.
-     * @param search The keyword to search for.
-     * @return true if the description contains the keyword, false otherwise.
-     */
-    public boolean contains(String search) {
-        return this.name.toLowerCase().contains(search.toLowerCase());
     }
 
     /**
