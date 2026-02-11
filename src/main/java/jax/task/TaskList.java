@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import jax.main.JaxException;
 import jax.storage.Storage;
-import jax.ui.Ui;
 
 /**
  * Contains the task list and operations to modify it (add, delete, mark, find).

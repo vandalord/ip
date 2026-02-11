@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import jax.main.JaxException;
 import jax.storage.Storage;
-import jax.ui.Ui;
 
 /**
  * Contains the contact list and operations to modify it (add, delete, mark, find).

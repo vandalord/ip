@@ -5,7 +5,6 @@ import jax.contact.Contact;
 import jax.contact.ContactList;
 import jax.storage.Storage;
 import jax.task.TaskList;
-import jax.ui.Ui;
 
 /**
  * Main entry point and controller for the Jax chatbot application.
@@ -26,20 +25,21 @@ public class Jax {
                                     + "What can I do for you?";
     private final static String GOODBYE = "\uD83D\uDC4B再见. Hope to see you again soon!\n"
                                     + "Closing in 3 seconds..." ;
-    private final static String HELP_MESSAGE = "Here are the commands you can use:\n"
-            + "1.  todo <description>\n"
-            + "2.  deadline <desc> /by <yyyy-MM-dd>\n"
-            + "3.  event <desc> /from <yyyy-MM-dd> /to <yyyy-MM-dd>\n"
-            + "4.  list\n"
-            + "5.  mark <index>\n"
-            + "6.  unmark <index>\n"
-            + "7.  delete <index>\n"
-            + "8.  find <keyword>\n"
-            + "9.  clear\n"
-            + "10. contact <name> /p <phone> /e <email>\n"
-            + "11. delcontact <name>\n"
-            + "12. contacts\n"
-            + "13. bye";
+    private final static String HELP_MESSAGE = """
+            Here are the commands you can use:
+            1.  todo <description>
+            2.  deadline <desc> /by <yyyy-MM-dd>
+            3.  event <desc> /from <yyyy-MM-dd> /to <yyyy-MM-dd>
+            4.  list
+            5.  mark <index>
+            6.  unmark <index>
+            7.  delete <index>
+            8.  find <keyword>
+            9.  clear
+            10. contact <name> /p <phone> /e <email>
+            11. delcontact <name>
+            12. contacts
+            13. bye""";
 
     /**
      * Initializes the chatbot components.
