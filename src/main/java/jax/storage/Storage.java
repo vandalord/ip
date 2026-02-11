@@ -68,7 +68,6 @@ public class Storage {
      * @return Objects loaded from the file.
      * @throws JaxException If the file is corrupted or cannot be read.
      */
-    @SuppressWarnings("unchecked")
     public Object readSavefile(String path) throws JaxException {
 
         File f = new File(path);
@@ -81,7 +80,7 @@ public class Storage {
              ObjectInputStream ois = new ObjectInputStream(fis)) {
             return ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            throw new JaxException("Error reading data.");
+            throw new JaxException("Error reading data from save file");
         }
     }
 

@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import jax.main.JaxException;
 import jax.storage.Storage;
-import jax.ui.Ui;
 
 /**
  * Contains the contact list and operations to modify it (add, delete, mark, find).
@@ -64,7 +63,7 @@ public class ContactList implements Serializable {
 
         Contact removed = contacts.remove(input);
         saveToStorage();
-        return ("Noted. Removed: " + removed);
+        return ("Noted. I have removed: " + removed + " from your contacts.");
     }
 
     /**
