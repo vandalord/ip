@@ -104,7 +104,10 @@ public class Storage {
     @SuppressWarnings("unchecked")
     public ArrayList<Task> loadTasks() throws JaxException {
         Object data = readSavefile(TASKS_URL);
-        return data == null ? new ArrayList<>() : (ArrayList<Task>) data;
+        if (data instanceof ArrayList<?>) {
+            return (ArrayList<Task>) data;
+        }
+        return new ArrayList<>();
     }
 
     /**
@@ -114,6 +117,9 @@ public class Storage {
     @SuppressWarnings("unchecked")
     public HashMap<String, Contact> loadContacts() throws JaxException {
         Object data = readSavefile(CONTACTS_URL);
-        return data == null ? new HashMap<>() : (HashMap<String, Contact>) data;
+        if (data instanceof HashMap<?, ?>) {
+            return (HashMap<String, Contact>) data;
+        }
+        return new HashMap<>();
     }
 }

@@ -50,4 +50,3 @@ public class Contact implements Serializable {
         return this.name + " " + this.contactNumber + " " + this.email;
     }
 }
-
