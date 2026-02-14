@@ -140,6 +140,10 @@ public class Parser {
                 throw new JaxException("Error - Name, phone, and email cannot be empty.");
             }
 
+            if (!isValidEmail(email)) {
+                throw new JaxException("Error - Invalid email format.");
+            }
+
             return new Contact(name, phone, email);
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new JaxException("Error - Missing /p or /e flags for contact details.");
@@ -155,5 +159,15 @@ public class Parser {
             throw new JaxException("Error - Please specify a contact name to delete.");
         }
         return input[1].trim();
+    }
+
+    /**
+     * Validates if the given string is a valid email format.
+     * @param email The email string to check.
+     * @return true if valid, false otherwise.
+     */
+    private static boolean isValidEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        return email.matches(emailRegex);
     }
 }

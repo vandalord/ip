@@ -22,7 +22,7 @@ public class Contact implements Serializable {
      * @param email The email of the contact.
      */
     public Contact(String name, String contactNumber, String email) {
-        this.name = name;
+        this.name = name.substring(0, 1).toUpperCase() + name.substring(1);
         this.contactNumber =  contactNumber;
         this.email = email;
     }
