@@ -21,9 +21,9 @@ public class Jax {
 
     private ContactList contacts;
 
-    private final static String GREET = "\uD83D\uDC4B你好! I'm Jax, your personal assistant chatbot!\n"
+    private final static String GREET = "\uD83D\uDC4B Top of the morning to you! I'm Jax, your personal assistant chatbot!\n"
                                     + "What can I do for you?";
-    private final static String GOODBYE = "\uD83D\uDC4B再见. Hope to see you again soon!\n"
+    private final static String GOODBYE = "\uD83D\uDC4B Aww shucks. Hope to see you again soon!\n"
                                     + "Closing in 3 seconds..." ;
     private final static String HELP_MESSAGE = """
             Here are the commands you can use:
@@ -43,8 +43,8 @@ public class Jax {
 
     /**
      * Initializes the chatbot components.
-     * Attempts to load existing tasks from the save file. If loading fails
-     * (e.g., file not found or corrupted), it initializes with an empty task list.
+     * Attempts to load existing tasks from the save file.
+     * If loading fails, it initializes with an empty task list.
      */
     public Jax() {
         this.storage = new Storage();

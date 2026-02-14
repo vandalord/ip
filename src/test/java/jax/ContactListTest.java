@@ -10,7 +10,6 @@ import java.util.HashMap;
 import jax.contact.ContactList;
 import jax.contact.Contact;
 import jax.main.JaxException;
-import jax.ui.Ui;
 import jax.storage.Storage;
 
 

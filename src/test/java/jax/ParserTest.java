@@ -65,4 +65,11 @@ public class ParserTest {
             Parser.parseContact(input);
         });
     }
+
+    @Test
+    public void parseContact_invalidEmail_exceptionThrown() {
+        String[] input = {"contact", "Jax /p 98765432 /e invalid-email"};
+        JaxException thrown = assertThrows(JaxException.class, () -> Parser.parseContact(input));
+        assertEquals("Error - Invalid email format.", thrown.getMessage());
+    }
 }
