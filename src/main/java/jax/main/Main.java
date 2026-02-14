@@ -37,6 +37,7 @@ public class Main extends Application {
             }
 
             stage.setScene(scene);
+            stage.setTitle("Jax");
             stage.setMinHeight(220);
             stage.setMinWidth(417);
             fxmlLoader.<MainWindow>getController().setJax(jax);
